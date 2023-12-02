@@ -1,0 +1,70 @@
+.dbe-btn {
+  font-size: 1.6rem;
+  font-weight: 600;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  white-space: nowrap;
+}
+
+.icon {
+  display: inline-flex;
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 24px;
+  max-height: 24px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.title {
+  flex: 1;
+}
+
+.icon + .title,
+.title + .icon {
+  margin-left: 12px;
+}
+
+.primary {
+  display: inline-flex;
+  border-radius: 6px;
+  background-color: #e0592a;
+  color: #f3f0ed;
+  opacity: 1;
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.outline {
+  display: inline-flex;
+  border-radius: 6px;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #727272;
+  &:hover {
+    border: 1px solid currentColor;
+  }
+}
+
+.text {
+  letter-spacing: 1px;
+  margin: 0;
+  padding: 0 8px;
+  background-color: transparent;
+}
+
+.scale {
+  &:hover {
+    transform: scale(1.04);
+  }
+}
+
+.disable {
+  cursor: not-allowed;
+  opacity: 0.5;
+  user-select: none;
+}
