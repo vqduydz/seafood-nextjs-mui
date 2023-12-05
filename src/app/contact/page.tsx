@@ -1,7 +1,6 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from '@mui/material';
 
-
-export default function StarredPage() {
+export default function Contact() {
   return (
     <Container>
       <Box
@@ -13,7 +12,7 @@ export default function StarredPage() {
         }}
       >
         <Typography variant="body1" gutterBottom>
-          Starred Page
+          Contact Page
         </Typography>
       </Box>
     </Container>

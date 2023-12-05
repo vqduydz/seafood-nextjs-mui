@@ -1,7 +1,6 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from '@mui/material';
 
-
-export default function TasksPage() {
+export default function About() {
   return (
     <Container>
       <Box
@@ -13,7 +12,7 @@ export default function TasksPage() {
         }}
       >
         <Typography variant="body1" gutterBottom>
-          Tasks Page
+          About
         </Typography>
       </Box>
     </Container>

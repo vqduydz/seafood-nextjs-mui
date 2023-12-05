@@ -6,6 +6,8 @@ interface ButtonProps {
   outline?: boolean;
   primary?: boolean;
   text?: boolean;
+  text_e?: boolean;
+  active?: boolean;
   scale?: boolean;
   disable?: boolean;
   leftIcon?: ReactNode;
@@ -15,12 +17,14 @@ interface ButtonProps {
   style?: object;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const Button = ({
   onClick,
   outline = false,
   primary = false,
   text = false,
+  text_e = false,
   scale = false,
+  active = false,
   disable = false,
   leftIcon,
   rightIcon,
@@ -28,7 +32,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   style,
   ...passProps
-}) => {
+}: ButtonProps) => {
   let Comp: React.ElementType = 'button';
   const props = {
     onClick,
@@ -52,8 +56,10 @@ const Button: React.FC<ButtonProps> = ({
     outline && 'outline',
     primary && 'primary',
     text && 'text',
+    text_e && 'text_e',
     scale && 'scale',
     disable && 'disable',
+    active && 'active',
     className,
   ]
     .filter(Boolean)

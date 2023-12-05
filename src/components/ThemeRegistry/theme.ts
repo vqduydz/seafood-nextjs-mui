@@ -1,7 +1,7 @@
-import { Roboto } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
 
-const roboto = Roboto({
+const montserrat = Montserrat({
   weight: ['300', '400', '500', '700', '900'],
   subsets: ['latin'],
   display: 'swap',
@@ -33,7 +33,7 @@ const theme = createTheme({
     mode: 'light',
   },
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily: montserrat.style.fontFamily,
     htmlFontSize: 10,
     fontSize: 12.25,
   },

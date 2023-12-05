@@ -3,12 +3,12 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Inner } from '../CustomComponents/CustomMui';
+import { Wrapper } from '../CustomComponents/CustomMui';
 
 function Footer() {
   return (
     <Box sx={{ backgroundColor: '#f5f5f5' }}>
-      <Inner
+      <Wrapper
         sx={{
           display: 'flex',
           padding: { xs: '15px', md: '20px 15px' },
@@ -92,7 +92,7 @@ function Footer() {
             <strong>Email : </strong> support.phobien@gmail.com
           </Typography>
         </Box>
-      </Inner>
+      </Wrapper>
       <Box
         sx={{
           background: '#64b9e5',
@@ -100,7 +100,7 @@ function Footer() {
           padding: '10px',
         }}
       >
-        <Inner sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', gap: '20px' }}>
+        <Wrapper sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', gap: '20px' }}>
           <Box>© 2023 SEAFOOD</Box>
           <Box
             sx={{
@@ -115,7 +115,7 @@ function Footer() {
               <Image width="32" height="32" src="/icons/youtube-square.svg" alt="Youtube/" />
             </Link>
           </Box>
-        </Inner>
+        </Wrapper>
       </Box>
     </Box>
   );

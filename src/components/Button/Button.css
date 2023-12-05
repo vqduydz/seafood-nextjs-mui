@@ -33,7 +33,6 @@
   border-radius: 6px;
   background-color: #e0592a;
   color: #f3f0ed;
-  opacity: 1;
   &:hover {
     opacity: 0.9;
   }
@@ -42,25 +41,44 @@
 .outline {
   display: inline-flex;
   border-radius: 6px;
-  background-color: #000;
-  color: #fff;
-  border: 1px solid #727272;
+  background-color: #fff;
+  color: #e0592a;
+  border: 1px solid #e0592a;
   &:hover {
-    border: 1px solid currentColor;
+    background-color: #e0592a;
+    color: #fff;
+    border: 1px solid #e0592a;
   }
 }
 
-.text {
+.text,
+.text_e {
   letter-spacing: 1px;
   margin: 0;
   padding: 0 8px;
   background-color: transparent;
+  border-radius: 6px;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  color: #e0592a;
+}
+
+.text_e {
+  &:hover {
+    border-top: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+  }
 }
 
 .scale {
   &:hover {
     transform: scale(1.04);
   }
+}
+
+.active {
+  border-top: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
 }
 
 .disable {

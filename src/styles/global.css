@@ -1,9 +1,15 @@
+/* @import slick-carousel/slick/slick.css;
+@import slick-carousel/slick/slick-theme.css; */
+
 ::-webkit-scrollbar {
   display: none; /* Ẩn thanh cuộn trình duyệt Chrome và Safari */
 }
 html {
   font-size: 62.5%;
+  min-width: 320px;
+  scroll-behavior: smooth;
 }
+
 button {
   cursor: pointer;
 }
@@ -19,4 +25,8 @@ input,
 a[href] {
   text-decoration: none;
   color: inherit;
+  line-height: normal;
+  &:hover {
+    color: #337ab7;
+  }
 }

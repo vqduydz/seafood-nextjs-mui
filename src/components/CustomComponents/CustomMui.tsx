@@ -1,46 +1,47 @@
 'use client';
-import { styled } from '@mui/system';
-import React from 'react';
+import { styled, SxProps } from '@mui/system';
 
-interface InnerProps {
-  sx?: Record<string, any>;
+interface WrapperProps {
+  // Mui
+  sx?: SxProps;
   className?: string;
   children?: React.ReactNode;
 }
 
-// Đặt tên khác nhau cho kiểu và biến
-const StyledInner = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '768px',
-    paddingRight: '0.1rem',
-    paddingLeft: '0.1rem',
-  },
-  [theme.breakpoints.up('lg')]: {
-    maxWidth: '992px',
-    paddingRight: '1.4rem',
-    paddingLeft: '1.4rem',
-  },
-  [theme.breakpoints.up('xl')]: {
-    maxWidth: '1200px',
-  },
-  [theme.breakpoints.up('xxl')]: {
-    maxWidth: '1440px',
-    paddingRight: '1.8rem',
-    paddingLeft: '1.8rem',
-  },
-}));
-
-export function Inner({ children, sx, className }: InnerProps) {
+export function Wrapper({ children, sx, className }: WrapperProps) {
   const baseStyle = {
     marginRight: 'auto',
     marginLeft: 'auto',
     width: '100%',
+    display: 'flex',
+    alignItems: 'center',
   };
+
+  const StyledWrapper = styled('div')(({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '768px',
+      paddingRight: '0.1rem',
+      paddingLeft: '0.1rem',
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: '992px',
+      paddingRight: '1.4rem',
+      paddingLeft: '1.4rem',
+    },
+    [theme.breakpoints.up('xl')]: {
+      maxWidth: '1200px',
+    },
+    [theme.breakpoints.up('xxl')]: {
+      maxWidth: '1440px',
+      paddingRight: '1.8rem',
+      paddingLeft: '1.8rem',
+    },
+  }));
 
   const classes = [className].filter(Boolean).join(' ');
   return (
-    <StyledInner className={classes} sx={{ ...baseStyle, ...sx }}>
+    <StyledWrapper className={classes} sx={{ ...baseStyle, ...sx }}>
       {children}
-    </StyledInner>
+    </StyledWrapper>
   );
 }
