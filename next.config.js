@@ -19,6 +19,7 @@ const nextConfig = {
   },
   env: {
     port: 3000,
+    // NODE_ENV: 'development',
     apiEndpoint: 'http://192.168.1.107:8080/v1/api',
     backendUrl: 'http://192.168.1.107:8080/',
     // secretKey: 'myCryptoJS',

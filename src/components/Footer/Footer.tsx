@@ -11,7 +11,7 @@ function Footer() {
       <Wrapper
         sx={{
           display: 'flex',
-          padding: { xs: '15px', md: '20px 15px' },
+          padding: 1,
           flexDirection: { xs: 'column', md: 'row' },
           width: '100%',
         }}
@@ -21,6 +21,7 @@ function Footer() {
             flex: 1,
             borderBottom: { xs: 'solid 1px #ccc', md: 'none' },
             paddingBottom: { xs: '10px', md: 0 },
+            width: '100%',
           }}
         >
           <Box
@@ -68,6 +69,7 @@ function Footer() {
             paddingTop: { xs: '10px', md: 0 },
             display: 'flex',
             flexDirection: 'column',
+            width: '100%',
           }}
         >
           <Typography>

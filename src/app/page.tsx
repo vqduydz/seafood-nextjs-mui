@@ -20,15 +20,15 @@ export default async function HomePage() {
         headerSlider={{ title: 'Special dish', extendTitle: { title: 'See more', url: '/menu#special-dish' } }}
       />
 
-      {/* <MySlider
+      <MySlider
         sx={{ backgroundColor: '#f5f5f5' }}
         data={{ items: monMoi, imagePath }}
         headerSlider={{ title: 'New dish', extendTitle: { title: 'See more', url: '/menu#new-dish' } }}
-      /> */}
-      {/* <MySlider
+      />
+      <MySlider
         data={{ items: catalogs, imagePath }}
         headerSlider={{ title: 'Categories', extendTitle: { title: 'See more', url: '/menu' } }}
-      /> */}
+      />
     </>
   );
 }

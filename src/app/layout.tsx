@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import '../styles/global.css';
+import ScrollTopBtn from '@/components/ScrollTopBtn/ScrollTopBtn';
 
 export const metadata = {
   title: 'Seafood',
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <Box sx={{ minHeight: 'calc(100vh - 246px)', pt: '112px' }}>{children}</Box>
           <Footer />
+          <ScrollTopBtn />
         </ThemeRegistry>
       </body>
     </html>

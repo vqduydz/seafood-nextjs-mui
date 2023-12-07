@@ -63,13 +63,7 @@ axiosService.interceptors.request.use(async (config: any) => {
 });
 
 axiosService.interceptors.response.use(
-  (response) => {
-    // if (response.status === 200 && response.data) {
-    //   return response.data;
-    // }
-
-    return response;
-  },
+  (response) => response,
   (error) => {
     console.warn(`Lỗi kết nối đến cơ sở dữ liệu, ${error.message}`);
   },

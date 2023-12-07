@@ -2,7 +2,7 @@ import { Wrapper } from '@/components/CustomComponents/CustomMui';
 import RenderContent from '@/components/renderContent/RenderContent';
 import { catalogApi } from '@/utils/services/api/catalogApi';
 import { Box, Typography } from '@mui/material';
-import Slider from './Slider';
+import CategoriesSlider from './CategoriesSlider';
 
 async function getData() {
   const res = await catalogApi();
@@ -28,11 +28,12 @@ const Menu = async () => {
 
   return (
     <>
-      <Slider />
+      <CategoriesSlider />
       <Box sx={{ mt: '50px' }}>
         {catalogsWithMenus.map((item: any, index: number) => {
           return (
             <Box
+              // className="scrollspy-categories"
               key={item.slug}
               id={item.slug}
               sx={{
@@ -42,7 +43,7 @@ const Menu = async () => {
                 backgroundColor: index % 2 === 0 ? '#fff' : '#f5f5f5',
               }}
             >
-              <Wrapper sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'start' }}>
+              <Wrapper sx={{ flexDirection: 'column', width: '100%', alignItems: 'start' }}>
                 <Typography
                   sx={{
                     fontSize: '2rem',

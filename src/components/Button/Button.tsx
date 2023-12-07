@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 import './Button.css';
 
 interface ButtonProps {
@@ -14,7 +14,7 @@ interface ButtonProps {
   rightIcon?: ReactNode;
   className?: string;
   children?: ReactNode;
-  style?: object;
+  style?: CSSProperties;
 }
 
 const Button = ({

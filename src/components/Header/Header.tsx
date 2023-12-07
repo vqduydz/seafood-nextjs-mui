@@ -20,7 +20,13 @@ export default function Header() {
         <Wrapper
           sx={{
             justifyContent: 'space-between',
-            button: { textTransform: 'uppercase', fontWeight: '900', fontSize: '1.6rem', padding: '1.2rem 2.4rem' },
+            button: {
+              textTransform: 'uppercase',
+              fontWeight: '900',
+              fontSize: '1.6rem',
+              padding: '1.2rem 2.4rem',
+              '+button': { ml: 2 },
+            },
           }}
         >
           <Link style={{ padding: 0, margin: 0 }} href={'/'}>
@@ -38,6 +44,7 @@ export default function Header() {
             </Link>
           </Box>
           <Button primary>RESERVATIONS</Button>
+          <Button outline>login</Button>
         </Wrapper>
       </Box>
     </AppBar>
