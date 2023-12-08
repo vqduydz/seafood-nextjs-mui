@@ -17,59 +17,9 @@ const CategoriesSlider = () => {
     let targetElement = document.getElementById(id);
     var targetOffsetTop = targetElement?.offsetTop;
     if (!targetOffsetTop) return;
-    // const buttons = document.querySelectorAll('.slider-btn');
-    // buttons.forEach((button) => button.classList.remove('active'));
-    // const clickedButton = document.querySelector(`.${id}`);
-    // clickedButton?.classList.add('active');
     var scrollTo = targetOffsetTop - 150;
     window.scrollTo(0, scrollTo);
   };
-
-  // const handleScroll = () => {
-  //   const targetElements = document.querySelectorAll('.scrollspy-categories');
-
-  //   targetElements.forEach((element) => {
-  //     const rect = element.getBoundingClientRect();
-  //     console.log(rect);
-
-  //     if (rect.top <= 200) {
-  //       const buttons = document.querySelectorAll('.slider-btn');
-  //       const sliders = document.querySelectorAll('.swiper-slide');
-
-  //       // swiper-slide swiper-slide-active
-
-  //       buttons.forEach((button) => {
-  //         const buttonClassNames: string[] = Array.from(button.classList);
-  //         const elementId: string = element.id;
-  //         if (buttonClassNames.includes(elementId)) {
-  //           button.classList.add('active');
-  //           sliders.forEach((slider) => {
-  //             if (slider.querySelector('button')?.classList.contains('active')) {
-  //               slider.classList.add('swiper-slide-active');
-  //               const prevSlider = slider.previousElementSibling;
-  //               if (prevSlider) {
-  //                 prevSlider.classList.add('swiper-slide-prev');
-  //               }
-  //               // Lấy phần tử div dưới nó và thêm class "next"
-  //               const nextSlider = slider.nextElementSibling;
-  //               if (nextSlider) {
-  //                 nextSlider.classList.add('swiper-slide-next');
-  //               }
-  //             } else {
-  //               slider.classList.remove('swiper-slide-active');
-  //               slider.classList.remove('swiper-slide-prev');
-  //               slider.classList.remove('swiper-slide-next');
-  //             }
-  //           });
-  //         } else {
-  //           button.classList.remove('active');
-  //         }
-  //       });
-  //     }
-  //   });
-  // };
-
-  // window.addEventListener('scroll', handleScroll);
 
   useEffect(() => {
     async function getData() {
@@ -108,6 +58,7 @@ const CategoriesSlider = () => {
     <Box
       sx={{
         position: 'fixed',
+        top: 112,
         left: '0',
         right: '0',
         zIndex: 1,
@@ -142,19 +93,11 @@ const CategoriesSlider = () => {
         }}
       >
         <Swiper
-          // style={{ padding: '5px 0 5px 40px' }}
-          // slideToClickedSlide={true}
-          // centerInsufficientSlides={true}
-          // centeredSlidesBounds={true}
-          // centeredSlides={true}
-          // slideToClickedSlide={true}
-          // navigation={true}
           autoplay={{
             delay: 1000,
             pauseOnMouseEnter: true,
           }}
           speed={1000}
-          // loop={true}
           slidesPerView={'auto'}
           modules={[Autoplay, Pagination, Navigation]}
         >

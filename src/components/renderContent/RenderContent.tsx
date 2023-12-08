@@ -3,6 +3,7 @@ import capitalize from '@/utils/capitalize';
 import renderPrice from '@/utils/renderPrice';
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
+import AddToCart from '../AddToCart/AddToCart';
 
 interface RenderProps {
   items: {
@@ -20,19 +21,25 @@ const RenderContent = ({ imagePath, items }: RenderProps) => {
     <Box
       key={item.slug}
       sx={{
+        position: 'relative',
         width: '100%',
         borderRadius: '6px',
         border: '1px solid  rgba(0,0,0,0.1)',
+        '& button': { visibility: 'hidden', opacity: 0, transition: 'opacity 0.3s ease', bottom: '5%' },
         '&:hover': {
           boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)',
           '.image': {
             transform: 'scale(1.04)',
           },
+          '.name': {
+            color: '#337ab7',
+          },
+          '& button': { visibility: 'visible', opacity: 0.8, ':hover': { opacity: 1 } },
         },
       }}
     >
       <Link href={`/detail?slug=${item?.slug}`} style={{ width: '100%' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', ':hover': {} }}>
           <Box sx={{ width: '100%', overflow: 'hidden', borderRadius: '6px' }}>
             <Box
               className="image"
@@ -49,24 +56,39 @@ const RenderContent = ({ imagePath, items }: RenderProps) => {
               }}
             />
           </Box>
+
           <Box
             sx={{
               display: 'flex',
               padding: '10px 10px 15px',
               flexDirection: 'column',
               gap: '5px',
-              textAlign: 'left',
-              '& p': { fontWeight: 700 },
+              alignItems: 'start',
             }}
           >
-            <Typography className="h3">{capitalize(item.name)}</Typography>
-            <Typography sx={{ fontSize: '1.5rem', color: '#e0592a' }}>
-              {item.price ? renderPrice(item.price) : item.price} / 1 {item.unit}
+            <Typography width={'100%'} display={'block'} className="name" fontWeight={700}>
+              {capitalize(item.name)}
             </Typography>
-            {/* <Box></Box> */}
+
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '5px',
+
+                '& p': { fontWeight: 700 },
+                alignItems: 'center',
+              }}
+            >
+              <Typography sx={{ fontSize: '1.5rem', color: '#e0592a' }}>
+                {item.price ? renderPrice(item.price) : item.price}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Link>
+      <AddToCart />
     </Box>
   ));
 };

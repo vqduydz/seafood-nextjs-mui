@@ -1,12 +1,14 @@
 import MySlider from '@/components/Slider/MySlider';
 import { catalogApi } from '@/utils/services/api/catalogApi';
+import withLayout from './hoc/withLayout';
+import DefaultLayout from './ShareLayout/DefaultLayout';
 
 async function getData() {
   const res = await catalogApi();
   return res;
 }
 
-export default async function HomePage() {
+async function HomePage() {
   const data = await getData();
   const { catalogsWithMenus, catalogs, imagePath } = data?.data;
 
@@ -16,19 +18,23 @@ export default async function HomePage() {
   return (
     <>
       <MySlider
+        menu
         data={{ items: monDacBiet, imagePath }}
-        headerSlider={{ title: 'Special dish', extendTitle: { title: 'See more', url: '/menu#special-dish' } }}
+        headerSlider={{ title: 'Món đặc biết', extendTitle: { title: 'Xem thêm', url: '/menu#mon-dac-biet' } }}
       />
 
       <MySlider
+        menu
         sx={{ backgroundColor: '#f5f5f5' }}
         data={{ items: monMoi, imagePath }}
-        headerSlider={{ title: 'New dish', extendTitle: { title: 'See more', url: '/menu#new-dish' } }}
+        headerSlider={{ title: 'Món mới', extendTitle: { title: 'Xem thêm', url: '/menu#cac-mon-moi' } }}
       />
       <MySlider
         data={{ items: catalogs, imagePath }}
-        headerSlider={{ title: 'Categories', extendTitle: { title: 'See more', url: '/menu' } }}
+        headerSlider={{ title: 'Categories', extendTitle: { title: 'Xem thêm', url: '/menu' } }}
       />
     </>
   );
 }
+
+export default withLayout(HomePage, DefaultLayout);

@@ -15,6 +15,7 @@ import { Wrapper } from '../CustomComponents/CustomMui';
 // import './styles.css';
 
 interface MySliderProps {
+  menu?: boolean;
   sx?: SxProps;
   data: {
     items: Record<string, any>[]; // Define the type for items with dynamic fields
@@ -31,7 +32,7 @@ interface MySliderProps {
   };
 }
 
-export default function MySlider({ data, sx, headerSlider }: MySliderProps) {
+export default function MySlider({ data, sx, headerSlider, menu }: MySliderProps) {
   const { items, imagePath } = data;
   const { title, headerSliderStyles = {}, extendTitle = { title: '', url: '' }, titleStyles = {} } = headerSlider || {};
 
@@ -106,7 +107,7 @@ export default function MySlider({ data, sx, headerSlider }: MySliderProps) {
           spaceBetween={10}
           slidesPerView={2}
           slidesPerGroup={1}
-          slideToClickedSlide={true}
+          // slideToClickedSlide={true}
           autoplay={{
             delay: 1500,
             pauseOnMouseEnter: true,
@@ -128,7 +129,11 @@ export default function MySlider({ data, sx, headerSlider }: MySliderProps) {
             const { image_url, name, slug, price } = item;
             return (
               <SwiperSlide key={index}>
-                <Content data={{ item: { image_url, name, slug, price }, imagePath: imagePath }} />
+                <Content
+                  quantity={items.length}
+                  menu={menu}
+                  data={{ item: { image_url, name, slug, price }, imagePath: imagePath }}
+                />
               </SwiperSlide>
             );
           })}

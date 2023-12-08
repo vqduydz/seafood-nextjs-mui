@@ -22,7 +22,7 @@ const nextConfig = {
     // NODE_ENV: 'development',
     apiEndpoint: 'http://192.168.1.107:8080/v1/api',
     backendUrl: 'http://192.168.1.107:8080/',
-    // secretKey: 'myCryptoJS',
+    secretKey: 'myCryptoJS',
   },
 };
 

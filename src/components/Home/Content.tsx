@@ -1,7 +1,9 @@
 import { Box, Typography } from '@mui/material';
-
+import { AddShoppingCart } from '@mui/icons-material';
 import renderPrice from '@/utils/renderPrice';
 import Link from 'next/link';
+import Button from '../Button/Button';
+import AddToCart from '../AddToCart/AddToCart';
 
 interface DynamicField {
   item: {
@@ -15,10 +17,11 @@ interface DynamicField {
 
 interface ContentProps<T> {
   data: T;
-  monChinh?: boolean;
+  menu?: boolean;
+  quantity: number;
 }
 
-function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
+function Content({ data, menu = false, quantity }: ContentProps<DynamicField>) {
   const { item, imagePath } = data;
   const { image_url, name, slug, price } = item;
 
@@ -39,10 +42,16 @@ function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
   return (
     <Box
       sx={{
-        width: '100%',
+        width: 'calc(100% - 4px)',
         textAlign: 'left',
         borderRadius: '6px',
         border: '2px solid  rgba(0,0,0,0.1)',
+        '& button': {
+          visibility: 'hidden',
+          opacity: 0,
+          transition: 'opacity 0.3s ease',
+          bottom: { xs: '5%', md: quantity <= 2 ? '3%' : '5%' },
+        },
         '&:hover': {
           boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)',
           '.h3': {
@@ -51,11 +60,12 @@ function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
           '.image': {
             transform: 'scale(1.04)',
           },
+          '& button': { visibility: 'visible', opacity: 0.8, ':hover': { opacity: 1 } },
         },
       }}
     >
       <Link
-        href={monChinh ? `/menu#${slug}` : `/menu#${slug}`}
+        href={menu ? `/detail?slug=${slug}` : `/menu#${slug}`}
         style={{
           padding: 0,
           width: '100%',
@@ -78,8 +88,10 @@ function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
               }}
             />
           </Box>
+
           <Box
             sx={{
+              flex: 1,
               display: 'flex',
               padding: '10px 10px 15px',
               flexDirection: 'column',
@@ -91,10 +103,25 @@ function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
             <Typography sx={{ color: 'var(--mau-sam)' }} className="h3">
               {name}
             </Typography>
-            <Typography sx={{ fontSize: '1.5rem', color: '#e0592a' }}>{price ? renderPrice(price) : price}</Typography>
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '5px',
+                textAlign: 'left',
+                '& p': { fontWeight: 700 },
+                alignItems: 'center',
+              }}
+            >
+              <Typography sx={{ fontSize: '1.5rem', color: '#e0592a' }}>
+                {price ? renderPrice(price) : price}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Link>
+      {menu && <AddToCart />}
     </Box>
   );
 }

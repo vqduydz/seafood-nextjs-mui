@@ -14,8 +14,10 @@ import dateTimeFormate from '@/utils/dateTimeFormate';
 import RenderContent from '@/components/renderContent/RenderContent';
 import { catalogApi } from '@/utils/services/api/catalogApi';
 import capitalize from '@/utils/capitalize';
+import withLayout from '../hoc/withLayout';
+import DefaultLayout from '../ShareLayout/DefaultLayout';
 
-export default function ItemDetail() {
+function ItemDetail() {
   const searchParams = useSearchParams();
   const _slug = searchParams.get('slug');
 
@@ -174,7 +176,7 @@ export default function ItemDetail() {
                   <Box> {trunbinh}</Box> - <Box> {soluot} đánh giá</Box>
                 </Box>
 
-                <Typography display={'inline-flex'} fontSize={'1.6rem'} fontWeight={500}>
+                <Typography display={'inline-flex'} alignItems={'center'} fontSize={'1.6rem'} fontWeight={500}>
                   Catalog :
                   <Link href={`/menu#${catalogSlug}`} style={{ color: '#337ab7' }}>
                     &nbsp;{catalog}
@@ -309,3 +311,5 @@ export default function ItemDetail() {
     </>
   );
 }
+
+export default withLayout(ItemDetail, DefaultLayout);

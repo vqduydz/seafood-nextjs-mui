@@ -1,11 +1,12 @@
 .dbe-btn {
   font-size: 1.6rem;
-  font-weight: 600;
+  font-weight: 700;
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
   white-space: nowrap;
   display: flex;
+  font-family: '__Montserrat_b527fe', '__Montserrat_Fallback_b527fe';
 }
 
 .icon {

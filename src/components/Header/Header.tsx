@@ -1,8 +1,10 @@
-import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Container, Toolbar, Tooltip, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../Button/Button';
 import { Wrapper } from '../CustomComponents/CustomMui';
+import UserAvatar from '../Avatar/Avatar';
+import UserBox from './UserBox';
 
 export default function Header() {
   return (
@@ -20,31 +22,33 @@ export default function Header() {
         <Wrapper
           sx={{
             justifyContent: 'space-between',
-            button: {
-              textTransform: 'uppercase',
-              fontWeight: '900',
-              fontSize: '1.6rem',
-              padding: '1.2rem 2.4rem',
-              '+button': { ml: 2 },
-            },
           }}
         >
           <Link style={{ padding: 0, margin: 0 }} href={'/'}>
             <Image width="250" height="80" src="/images/logo.png" alt="logo" priority />
           </Link>
-          <Box sx={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '15px',
+              button: {
+                textTransform: 'uppercase',
+                fontWeight: '900',
+                fontSize: '1.8rem',
+                padding: '1.2rem 2.4rem',
+              },
+            }}
+          >
             <Link href={'/menu'}>
               <Button text_e>Menu</Button>
             </Link>
-            <Link href={'/about'}>
-              <Button text_e>About</Button>
-            </Link>
+            <Button text_e>Đặt bàn</Button>
             <Link href={'/contact'}>
-              <Button text_e>Contact</Button>
+              <Button text_e>Liên hệ</Button>
             </Link>
           </Box>
-          <Button primary>RESERVATIONS</Button>
-          <Button outline>login</Button>
+          <UserBox />
         </Wrapper>
       </Box>
     </AppBar>

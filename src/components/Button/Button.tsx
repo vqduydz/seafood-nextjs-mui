@@ -2,7 +2,7 @@ import React, { CSSProperties, ReactNode } from 'react';
 import './Button.css';
 
 interface ButtonProps {
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (event?: React.MouseEvent<HTMLElement>) => void;
   outline?: boolean;
   primary?: boolean;
   text?: boolean;

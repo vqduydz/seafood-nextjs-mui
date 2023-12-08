@@ -3,6 +3,8 @@ import RenderContent from '@/components/renderContent/RenderContent';
 import { catalogApi } from '@/utils/services/api/catalogApi';
 import { Box, Typography } from '@mui/material';
 import CategoriesSlider from './CategoriesSlider';
+import DefaultLayout from '../ShareLayout/DefaultLayout';
+import withLayout from '../hoc/withLayout';
 
 async function getData() {
   const res = await catalogApi();
@@ -27,7 +29,7 @@ const Menu = async () => {
   });
 
   return (
-    <>
+    <Box>
       <CategoriesSlider />
       <Box sx={{ mt: '50px' }}>
         {catalogsWithMenus.map((item: any, index: number) => {
@@ -78,8 +80,8 @@ const Menu = async () => {
           );
         })}
       </Box>
-    </>
+    </Box>
   );
 };
 
-export default Menu;
+export default withLayout(Menu, DefaultLayout);
