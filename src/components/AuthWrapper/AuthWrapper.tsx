@@ -1,10 +1,11 @@
+import { SxProps } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
-export default function AuthWrapper({ children }: { children: ReactNode }) {
+export default function AuthWrapper({ children, sx }: { children: ReactNode; sx?: SxProps }) {
   return (
     <Box
       sx={{
@@ -61,8 +62,7 @@ export default function AuthWrapper({ children }: { children: ReactNode }) {
             <Image width="250" height="80" src="/images/logo.png" alt="logo" priority />
           </Link>
         </Box>
-
-        <Box sx={{}}>{children}</Box>
+        <Box sx={sx}>{children}</Box>
       </Box>
     </Box>
   );

@@ -1,12 +1,11 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import { authReducer, languageReducer } from './features/authSlices';
-import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-import storage from 'redux-persist/lib/storage';
 import CryptoJS from 'crypto-js';
 import createTransform from 'redux-persist/es/createTransform';
+import storage from 'redux-persist/lib/storage';
 
 const secretKey: string = process.env.secretKey as string;
 
@@ -29,7 +28,7 @@ const decryptAuthToken = (encryptedAuthToken: string | null) => {
 };
 
 const persistConfig = {
-  key: 'auth',
+  key: 'root',
   storage: storage,
   // stateReconciler: autoMergeLevel2,
   whitelist: ['auth', 'language', 'orderItems'],
@@ -37,21 +36,25 @@ const persistConfig = {
     createTransform(
       (inboundState, key) => {
         if (key === 'auth' && inboundState) {
-          const { token, ...rest } = inboundState as {
+          const { token, isLogin, currentUser } = inboundState as {
             token: string | null;
+            isLogin: boolean;
+            currentUser: string | null;
           };
           const encryptedAuthToken = encryptAuthToken(token);
-          return { token: encryptedAuthToken, ...rest };
+          return { token: encryptedAuthToken, isLogin, currentUser };
         }
         return inboundState;
       },
       (outboundState, key) => {
         if (key === 'auth' && outboundState) {
-          const { token, ...rest } = outboundState as {
+          const { token, isLogin, currentUser } = outboundState as {
             token: string | null;
+            isLogin: boolean;
+            currentUser: string | null;
           };
           const decryptedAuthToken = decryptAuthToken(token);
-          return { token: decryptedAuthToken, ...rest };
+          return { token: decryptedAuthToken, isLogin, currentUser };
         }
         return outboundState;
       },

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface DynamicField {
   item: {
-    image_url: string;
+    image: string;
     name: string;
     slug: string;
     price: number;
@@ -20,7 +20,7 @@ interface ContentProps<T> {
 
 function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
   const { item, imagePath } = data;
-  const { image_url, name, slug, price } = item;
+  const { image, name, slug, price } = item;
 
   // useEffect(() => {
   //   if (window.location.hash === '#id1') {
@@ -66,7 +66,7 @@ function Content({ data, monChinh = false }: ContentProps<DynamicField>) {
             <Box
               className="image"
               sx={{
-                backgroundImage: `url(${imagePath}${image_url})`,
+                backgroundImage: `url(${imagePath}${image})`,
                 paddingTop: '56.25%',
                 position: 'relative',
                 width: '100%',

@@ -7,7 +7,7 @@ import AddToCart from '../AddToCart/AddToCart';
 
 interface RenderProps {
   items: {
-    image_url: string;
+    image: string;
     name: string;
     slug: string;
     unit: string;
@@ -44,7 +44,7 @@ const RenderContent = ({ imagePath, items }: RenderProps) => {
             <Box
               className="image"
               sx={{
-                backgroundImage: `url(${imagePath}${item.image_url})`,
+                backgroundImage: `url(${imagePath}${item.image})`,
                 paddingTop: '56.25%',
                 position: 'relative',
                 width: '100%',

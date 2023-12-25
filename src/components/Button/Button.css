@@ -50,7 +50,7 @@
   border-radius: 6px;
   background-color: #fff;
   color: #e0592a;
-  border: 1px solid #e0592a;
+  border: 1px solid currentColor;
   &:hover {
     background-color: #e0592a;
     color: #fff;

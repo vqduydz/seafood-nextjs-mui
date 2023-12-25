@@ -1,10 +1,9 @@
-import { Wrapper } from '@/components/CustomComponents/CustomMui';
+import { Wrapper } from '@/components/Wrapper/Wrapper';
 import RenderContent from '@/components/renderContent/RenderContent';
 import { catalogApi } from '@/utils/services/api/catalogApi';
 import { Box, Typography } from '@mui/material';
-import CategoriesSlider from './CategoriesSlider';
 import DefaultLayout from '../ShareLayout/DefaultLayout';
-import withLayout from '../hoc/withLayout';
+import CategoriesSlider from './CategoriesSlider';
 
 async function getData() {
   const res = await catalogApi();
@@ -29,7 +28,7 @@ const Menu = async () => {
   });
 
   return (
-    <Box>
+    <DefaultLayout>
       <CategoriesSlider />
       <Box sx={{ mt: '50px' }}>
         {catalogsWithMenus.map((item: any, index: number) => {
@@ -80,8 +79,8 @@ const Menu = async () => {
           );
         })}
       </Box>
-    </Box>
+    </DefaultLayout>
   );
 };
 
-export default withLayout(Menu, DefaultLayout);
+export default Menu;

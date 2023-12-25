@@ -1,20 +1,19 @@
 'use client';
-import AddShoppingCartSharpIcon from '@mui/icons-material/AddShoppingCartSharp';
 import Button from '@/components/Button/Button';
-import { Wrapper } from '@/components/CustomComponents/CustomMui';
+import { Wrapper } from '@/components/Wrapper/Wrapper';
+import RenderContent from '@/components/renderContent/RenderContent';
+import capitalize from '@/utils/capitalize';
+import dateTimeFormate from '@/utils/dateTimeFormate';
 import renderPrice from '@/utils/renderPrice';
+import { catalogApi } from '@/utils/services/api/catalogApi';
 import { feedbackApi } from '@/utils/services/api/feedbackapi';
 import { menuApi } from '@/utils/services/api/menuApi';
+import AddShoppingCartSharpIcon from '@mui/icons-material/AddShoppingCartSharp';
 import { Box, Rating, Typography } from '@mui/material';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import dateTimeFormate from '@/utils/dateTimeFormate';
-import RenderContent from '@/components/renderContent/RenderContent';
-import { catalogApi } from '@/utils/services/api/catalogApi';
-import capitalize from '@/utils/capitalize';
-import withLayout from '../hoc/withLayout';
 import DefaultLayout from '../ShareLayout/DefaultLayout';
 
 function ItemDetail() {
@@ -29,7 +28,7 @@ function ItemDetail() {
     unit: string;
     catalogSlug: string;
     imagePath: string;
-    image_url: string;
+    image: string;
   }
   interface Suggest {
     items: any[];
@@ -61,14 +60,14 @@ function ItemDetail() {
     unit: '',
     catalogSlug: '',
     imagePath: '',
-    image_url: '',
+    image: '',
   });
 
   const [feedbacks, setFeedbacks] = useState<Feedback[]>();
   const [rateValue, setRateValue] = useState<RateValue>({ soluot: 0, trunbinh: 0 });
   const [suggest, setSuggest] = useState<Suggest>({ items: [], imagePath: '' });
 
-  const { id, name, catalog, price, unit, catalogSlug, imagePath, image_url } = menu;
+  const { id, name, catalog, price, unit, catalogSlug, imagePath, image } = menu;
   const { soluot, trunbinh } = rateValue;
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -79,6 +78,7 @@ function ItemDetail() {
         setMenu(menu.data);
         if (menu.data && menu.data.id) {
           const feedbacks = await feedbackApi({ menu_id: menu.data.id });
+
           setFeedbacks(feedbacks.data);
           setRateValue({
             soluot: parseFloat(feedbacks.data.length),
@@ -106,7 +106,7 @@ function ItemDetail() {
   }, [_slug]);
 
   return (
-    <>
+    <DefaultLayout>
       <Box sx={{ borderBottom: '3px solid #efeef5' }}>
         <Wrapper
           sx={{
@@ -132,7 +132,7 @@ function ItemDetail() {
             >
               <Box
                 sx={{
-                  backgroundImage: `url(${imagePath}${image_url})`,
+                  backgroundImage: `url(${imagePath}${image})`,
                   width: '100%',
                   paddingTop: { xs: '56.25%', md: '66.25%', xl: '56.25%' },
                   position: 'relative',
@@ -308,8 +308,8 @@ function ItemDetail() {
           </Box>
         </Wrapper>
       </Box>
-    </>
+    </DefaultLayout>
   );
 }
 
-export default withLayout(ItemDetail, DefaultLayout);
+export default ItemDetail;

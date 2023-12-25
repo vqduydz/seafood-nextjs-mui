@@ -3,7 +3,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Wrapper } from '../CustomComponents/CustomMui';
+import { Wrapper } from '../Wrapper/Wrapper';
 
 function Footer() {
   return (

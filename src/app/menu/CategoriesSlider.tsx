@@ -1,25 +1,29 @@
 'use client';
+import Button from '@/components/Button/Button';
+import { Wrapper } from '@/components/Wrapper/Wrapper';
+import { catalogApi } from '@/utils/services/api/catalogApi';
+import { Box } from '@mui/material';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import Button from '@/components/Button/Button';
-import { Wrapper } from '@/components/CustomComponents/CustomMui';
-import { catalogApi } from '@/utils/services/api/catalogApi';
-import { Box } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const CategoriesSlider = () => {
   const [catalogs, setCatalogs] = useState([]);
+  const searchParams = useSearchParams();
 
-  const scroll = (id: string) => {
-    let targetElement = document.getElementById(id);
-    var targetOffsetTop = targetElement?.offsetTop;
-    if (!targetOffsetTop) return;
-    var scrollTo = targetOffsetTop - 150;
-    window.scrollTo(0, scrollTo);
-  };
+  useEffect(() => {
+    const slug = `${searchParams}`.replace(/\=/g, '');
+    const section = document.getElementById(slug);
+    if (section) {
+      const offset = section.offsetTop - 150; // Điều chỉnh giảm 50px
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function getData() {
@@ -42,16 +46,6 @@ const CategoriesSlider = () => {
       setCatalogs(catalogs);
     }
     getData();
-  }, []);
-
-  useEffect(() => {
-    const slug = window.location.hash.substr(1);
-    if (!slug) return;
-    let targetElement = document.getElementById(slug);
-    if (!targetElement) return;
-    var targetOffsetTop = targetElement.offsetTop;
-    var scrollTo = targetOffsetTop - 150;
-    window.scrollTo(0, scrollTo);
   }, []);
 
   return (
@@ -105,17 +99,18 @@ const CategoriesSlider = () => {
             const { name, slug } = item;
             return (
               <SwiperSlide key={index} className={'slider-btn'}>
-                <Button
-                  scale
-                  // text_e
-                  text
-                  style={{ padding: '8px 24px' }}
-                  onClick={() => {
-                    scroll(slug);
-                  }}
+                <Link
+                  href={`?=${slug}`}
+
+                  // onClick={(e) => {
+                  //   scroll(slug, e);
+                  // }}
                 >
-                  {name}
-                </Button>
+                  <Button text scale style={{ padding: '8px 24px' }}>
+                    {' '}
+                    {name}
+                  </Button>
+                </Link>
               </SwiperSlide>
             );
           })}

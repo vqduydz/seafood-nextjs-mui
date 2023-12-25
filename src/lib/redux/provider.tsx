@@ -7,10 +7,8 @@ import { persistor, store } from './store';
 
 export default function ReduxProvider({ children }: { children: ReactNode }) {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        {children}
-      </PersistGate>
-    </Provider>
+    <PersistGate loading={null} persistor={persistor}>
+      <Provider store={store}>{children}</Provider>
+    </PersistGate>
   );
 }

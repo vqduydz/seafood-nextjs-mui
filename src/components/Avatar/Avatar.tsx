@@ -1,15 +1,37 @@
+import { useAppSelector } from '@/lib/redux/store';
+import capitalize from '@/utils/capitalize';
 import { Avatar } from '@mui/material';
-import { CSSProperties } from 'react';
-// import { useAuth } from '_/context/AuthContext';
+import { jwtDecode } from 'node_modules/jwt-decode/build/cjs';
+import { CSSProperties, useEffect, useState } from 'react';
 
 interface Props {
   sx?: CSSProperties;
 }
 
-function UserAvatar({ sx }: Props) {
-  // const { currentUser } = useAuth();
+interface IcurrentUser {
+  id: number | null;
+  email: string | null;
+  name: string;
+  phoneNumber: string | null;
+  gender: string | null;
+  address: string | null;
+  location: string | null;
+  avatar: string | null;
+  role: string | null;
+  birthday: string | null;
+  createdAt: string | null;
+}
 
-  let currentUser = { photoURL: '', avatarUrl: '', firstName: 'a', lastName: 'd' };
+function UserAvatar(sx: Props) {
+  const [currentUser, setCurrentUser] = useState<IcurrentUser>();
+  const currentUserToken = useAppSelector((state) => state.auth.currentUser) as string;
+
+  useEffect(() => {
+    if (currentUserToken) {
+      const decodedToken = jwtDecode(currentUserToken) as IcurrentUser;
+      setCurrentUser(decodedToken);
+    }
+  }, [currentUserToken]);
 
   if (!currentUser) return;
   function stringToColor(name: string) {
@@ -17,7 +39,6 @@ function UserAvatar({ sx }: Props) {
     let i;
 
     if (name) {
-      /* eslint-disable no-bitwise */
       for (i = 0; i < name.length; i += 1) {
         hash = name.charCodeAt(i) + ((hash << 5) - hash);
       }
@@ -28,8 +49,6 @@ function UserAvatar({ sx }: Props) {
         const value = (hash >> (i * 8)) & 0xff;
         color += `00${value.toString(16)}`.slice(-2);
       }
-      /* eslint-enable no-bitwise */
-
       return color;
     }
   }
@@ -37,20 +56,21 @@ function UserAvatar({ sx }: Props) {
   function stringAvatar(name: string) {
     if (name) {
       return {
-        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+        children: name.includes(' ')
+          ? `${capitalize(name.split(' ')[0][0])}${capitalize(name.split(' ')[1][0])}`
+          : `${capitalize(name.split(' ')[0][0])}`,
       };
     }
   }
-
   if (!currentUser) return;
-  const { photoURL, avatarUrl, firstName, lastName } = currentUser;
-  const displayName = lastName
-    ? firstName + ' ' + lastName
-    : firstName.split(' ')[0][0] + ' ' + firstName.split(' ')[0][1];
-  return photoURL || avatarUrl ? (
-    <Avatar alt={displayName} src={avatarUrl ? avatarUrl : photoURL} sx={sx} />
+
+  return currentUser?.avatar ? (
+    <Avatar alt={currentUser?.name} src={currentUser?.avatar} sx={{ ...sx }} />
   ) : (
-    <Avatar {...stringAvatar(displayName)} sx={{ backgroundColor: stringToColor(displayName), color: '#fff', ...sx }} />
+    <Avatar
+      {...stringAvatar(currentUser?.name)}
+      sx={{ backgroundColor: stringToColor(currentUser?.name), color: '#fff', ...sx }}
+    />
   );
 }
 

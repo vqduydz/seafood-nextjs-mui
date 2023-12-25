@@ -10,7 +10,7 @@ import Content from '../Home/Content';
 
 import Link from 'next/link';
 import Button from '../Button/Button';
-import { Wrapper } from '../CustomComponents/CustomMui';
+import { Wrapper } from '../Wrapper/Wrapper';
 
 // import './styles.css';
 
@@ -126,13 +126,13 @@ export default function MySlider({ data, sx, headerSlider, menu }: MySliderProps
           modules={[Autoplay, Pagination, Navigation]}
         >
           {items.map((item, index: number) => {
-            const { image_url, name, slug, price } = item;
+            const { image, name, slug, price } = item;
             return (
               <SwiperSlide key={index}>
                 <Content
                   quantity={items.length}
                   menu={menu}
-                  data={{ item: { image_url, name, slug, price }, imagePath: imagePath }}
+                  data={{ item: { image, name, slug, price }, imagePath: imagePath }}
                 />
               </SwiperSlide>
             );
