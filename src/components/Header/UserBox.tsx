@@ -8,7 +8,6 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import LoginIcon from '@mui/icons-material/Login';
 import { Avatar, Box, Tooltip } from '@mui/material';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import UserAvatar from '../Avatar/Avatar';
 import Button from '../Button/Button';
@@ -19,7 +18,6 @@ const UserBox = () => {
   const elementRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const handleOutsideClick = (event: MouseEvent) => {
     const element = elementRef.current as HTMLElement;
@@ -36,11 +34,6 @@ const UserBox = () => {
   }, []);
 
   const isLogin = useAppSelector((state) => state.auth.isLogin) as string;
-
-  // useEffect(() => {
-  //   if (!isLogin) return router.push('/login');
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isLogin]);
 
   return (
     <>
@@ -69,18 +62,7 @@ const UserBox = () => {
               top: '40px',
               right: 0,
               opacity: '1',
-              // '&:before': {
-              //   boxShadow: '-1px -1px 0px 0px #e0592a',
-              //   content: '""',
-              //   display: 'block',
-              //   position: 'absolute',
-              //   top: 0,
-              //   right: { xs: 40, lg: 50, xxl: 55 },
-              //   width: 10,
-              //   height: 10,
-              //   bgcolor: '#fff',
-              //   transform: 'translateY(-50%) rotate(45deg)',
-              // },
+
               '.user-btn': {
                 height: 'auto',
                 borderRadius: 0,

@@ -22,11 +22,7 @@ input,
 
 a[href] {
   text-decoration: none;
-  color: inherit;
   line-height: normal;
-  &:hover {
-    color: #337ab7;
-  }
 }
 
 body {

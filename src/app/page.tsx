@@ -9,9 +9,7 @@ async function getData() {
 
 async function HomePage() {
   const data = await getData();
-
   const { catalogsWithMenus, catalogs, imagePath } = data?.data;
-
   const monMoi = catalogsWithMenus.find((catalog: any) => catalog.slug === 'cac-mon-moi').menus;
   const monDacBiet = catalogsWithMenus.find((catalog: any) => catalog.slug === 'mon-dac-biet').menus;
 

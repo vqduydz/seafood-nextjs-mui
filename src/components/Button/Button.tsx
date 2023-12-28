@@ -1,9 +1,11 @@
 import React, { CSSProperties, ReactNode } from 'react';
 import './Button.css';
+import Link from 'next/link';
 
 interface ButtonProps {
   onClick?: (event?: React.MouseEvent<HTMLElement>) => void;
   outline?: boolean;
+  link?: boolean;
   primary?: boolean;
   text?: boolean;
   text_e?: boolean;
@@ -15,11 +17,13 @@ interface ButtonProps {
   className?: string;
   children?: ReactNode;
   style?: CSSProperties;
+  href?: string;
 }
 
 const Button = ({
   onClick,
   outline = false,
+  link = false,
   primary = false,
   text = false,
   text_e = false,
@@ -31,13 +35,11 @@ const Button = ({
   className,
   children,
   style,
+  href,
   ...passProps
 }: ButtonProps) => {
   let Comp: React.ElementType = 'button';
-  const props = {
-    onClick,
-    ...passProps,
-  };
+  const props = { href, onClick, ...passProps };
 
   const propsWithIndexSignature: { [key: string]: any } = props;
 
@@ -51,12 +53,18 @@ const Button = ({
 
   // ...
 
+  if (href) {
+    props.href = href;
+    Comp = Link;
+  }
+
   const classes = [
     'dbe-btn',
     outline && 'outline',
     primary && 'primary',
     text && 'text',
     text_e && 'text_e',
+    link && 'link',
     scale && 'scale',
     disable && 'disable',
     active && 'active',

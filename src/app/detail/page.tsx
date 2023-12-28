@@ -178,7 +178,7 @@ function ItemDetail() {
 
                 <Typography display={'inline-flex'} alignItems={'center'} fontSize={'1.6rem'} fontWeight={500}>
                   Catalog :
-                  <Link href={`/menu#${catalogSlug}`} style={{ color: '#337ab7' }}>
+                  <Link href={`/menu?=${catalogSlug}`} style={{ color: '#337ab7' }}>
                     &nbsp;{catalog}
                   </Link>
                 </Typography>

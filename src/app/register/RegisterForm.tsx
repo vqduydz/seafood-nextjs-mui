@@ -3,13 +3,13 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { getToken, login, loginError, setToken } from '@/lib/redux/features/authSlices';
+import { setLoading } from '@/lib/redux/features/loadingSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import useSocket from '@/lib/socket.io/useSocket';
 import { myColors } from '@/styles/color';
 import capitalize from '@/utils/capitalize';
 import { createNewUserApi } from '@/utils/services/api/userApi';
-import { Box, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
-import Link from 'next/link';
+import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
@@ -45,11 +45,13 @@ export function RegisterForm() {
       dispatch(login(token));
       return;
     }
-    if (isLogin) router.push('/');
+    return router.push('/');
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLogin, token]);
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    dispatch(setLoading({ isLoading: true, message: 'Hệ thống đang xử lý, vui lòng chờ trong giây lát...' }));
     try {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
@@ -77,6 +79,8 @@ export function RegisterForm() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(setLoading({ isLoading: false, message: null }));
     }
   };
 
@@ -192,11 +196,9 @@ export function RegisterForm() {
         }}
       >
         <Typography>Đã có tài khoản ?</Typography> <Typography> {'=>'}</Typography>
-        <Link href={'/login'}>
-          <Button primary style={{ backgroundColor: myColors.secondary, padding: ' 6px 12px' }}>
-            Đăng nhập
-          </Button>
-        </Link>
+        <Button link href={'/login'}>
+          Đăng nhập
+        </Button>
       </Box>
     </>
   );

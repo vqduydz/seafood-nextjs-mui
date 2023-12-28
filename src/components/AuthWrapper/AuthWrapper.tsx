@@ -62,7 +62,9 @@ export default function AuthWrapper({ children, sx }: { children: ReactNode; sx?
             <Image width="250" height="80" src="/images/logo.png" alt="logo" priority />
           </Link>
         </Box>
-        <Box sx={sx}>{children}</Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', flexDirection: 'column', pt: '15px' }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );

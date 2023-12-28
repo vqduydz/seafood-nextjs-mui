@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import useSocket from '@/lib/socket.io/useSocket';
 import { myColors } from '@/styles/color';
 import { Box, Typography } from '@mui/material';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
@@ -51,8 +50,8 @@ export function LoginForm() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const loginInfo = {
-      email: data.get('email') as string | null,
-      password: data.get('password') as string | null,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
     };
 
     getToken(loginInfo);
@@ -130,16 +129,12 @@ export function LoginForm() {
           '& *': { fontSize: '1.4rem' },
         }}
       >
-        <Link href={'#'}>
-          <Button primary style={{ backgroundColor: myColors.secondary, padding: ' 6px 12px' }}>
-            Quên mật khẩu
-          </Button>
-        </Link>
-        <Link href={'/register'}>
-          <Button primary style={{ backgroundColor: myColors.secondary, padding: ' 6px 12px' }}>
-            Đăng ký
-          </Button>
-        </Link>
+        <Button link href={'/fogot-password'}>
+          Quên mật khẩu
+        </Button>
+        <Button link href={'/register'}>
+          Đăng ký
+        </Button>
       </Box>
     </>
   );

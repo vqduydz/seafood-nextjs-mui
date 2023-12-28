@@ -2,8 +2,8 @@ import ScrollTopBtn from '@/components/ScrollTopBtn/ScrollTopBtn';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import { Box } from '@mui/material';
 import '../styles/global.css';
-// import { NextAuthProvider } from '@/lib/nextAuth/providers';
 import ReduxProvider from '@/lib/redux/provider';
+import Loading from '@/components/Loading/Loading';
 
 export const metadata = {
   title: 'Seafood',
@@ -15,12 +15,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <ThemeRegistry>
-          {/* <NextAuthProvider> */}
           <ReduxProvider>
             <Box sx={{ minHeight: 'calc(100vh - 246px)' }}>{children}</Box>
+            <Loading />
             <ScrollTopBtn />
           </ReduxProvider>
-          {/* </NextAuthProvider> */}
         </ThemeRegistry>
       </body>
     </html>

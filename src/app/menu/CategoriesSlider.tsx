@@ -5,7 +5,7 @@ import { catalogApi } from '@/utils/services/api/catalogApi';
 import { Box } from '@mui/material';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -15,15 +15,22 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 const CategoriesSlider = () => {
   const [catalogs, setCatalogs] = useState([]);
   const searchParams = useSearchParams();
+  const [isB, setIsB] = useState(false);
 
-  useEffect(() => {
-    const slug = `${searchParams}`.replace(/\=/g, '');
-    const section = document.getElementById(slug);
-    if (section) {
-      const offset = section.offsetTop - 150; // Điều chỉnh giảm 50px
-      window.scrollTo({ top: offset, behavior: 'smooth' });
-    }
-  }, [searchParams]);
+  // useEffect(() => {
+  //   const slug = `${searchParams}`.replace(/\=/g, '');
+  //   const section = document.getElementById(slug);
+  //   if (section) {
+  //     const offset = section.offsetTop - 150;
+  //     window.scrollTo({ top: offset, behavior: 'smooth' });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isB, searchParams]);
+
+  const checkDefaultEvent = (e: any) => {
+    // e.preventDefault();
+    console.log(e.target.value);
+  };
 
   useEffect(() => {
     async function getData() {
@@ -99,15 +106,8 @@ const CategoriesSlider = () => {
             const { name, slug } = item;
             return (
               <SwiperSlide key={index} className={'slider-btn'}>
-                <Link
-                  href={`?=${slug}`}
-
-                  // onClick={(e) => {
-                  //   scroll(slug, e);
-                  // }}
-                >
+                <Link href={`?=${slug}`} onClick={checkDefaultEvent}>
                   <Button text scale style={{ padding: '8px 24px' }}>
-                    {' '}
                     {name}
                   </Button>
                 </Link>

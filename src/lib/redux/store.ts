@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
-import { authReducer, languageReducer } from './features/authSlices';
+import { authReducer } from './features/authSlices';
 
 import CryptoJS from 'crypto-js';
 import createTransform from 'redux-persist/es/createTransform';
 import storage from 'redux-persist/lib/storage';
+import { loadingReducer } from './features/loadingSlice';
+import { languageReducer } from './features/languageSlice';
 
 const secretKey: string = process.env.secretKey as string;
 
@@ -63,6 +65,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  loading: loadingReducer,
   auth: authReducer,
   language: languageReducer,
 });
