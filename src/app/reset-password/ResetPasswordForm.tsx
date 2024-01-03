@@ -2,8 +2,7 @@
 
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
-import { setLoading } from '@/lib/redux/features/loadingSlice';
-import { useAppDispatch } from '@/lib/redux/store';
+import { useMyContext } from '@/context/context';
 import { myColors } from '@/styles/color';
 import { resetPasswordApi } from '@/utils/services/api/userApi';
 import { Box, Typography } from '@mui/material';
@@ -17,23 +16,22 @@ export function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token') as string;
 
-  const dispatch = useAppDispatch();
-
+  const { setLoading } = useMyContext();
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    dispatch(setLoading({ isLoading: true, message: 'Hệ thống đang xử lý, vui lòng chờ trong giây lát...' }));
+    if (setLoading) setLoading({ loading: true });
     try {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
       const password = data.get('password') as string;
       const confirmPassword = data.get('confirmPassword') as string;
       if (password !== confirmPassword) {
-        dispatch(setLoading({ isLoading: false, message: null }));
+        if (setLoading) setLoading({ loading: false });
         return setError('Xác nhận mật khẩu không trùng khớp !');
       }
       const res = await resetPasswordApi(token, password);
 
       if (res.data && res.data.error) {
-        dispatch(setLoading({ isLoading: false, message: null }));
+        if (setLoading) setLoading({ loading: false });
         setError(res.data.error);
         setSuccess(null);
         return;
@@ -41,19 +39,15 @@ export function ResetPasswordForm() {
       if (res.data && res.data.message) {
         setSuccess(res.data.message);
         setError(null);
-        dispatch(
-          setLoading({
-            isLoading: true,
-            message: 'Mật khẩu đã được cập nhật, chuyến đến trang đăng nhập.',
-          }),
-        );
+        if (setLoading)
+          setLoading({ loading: true, message: 'Cập nhật mật khẩu thành công. Chuyển tiếp đến Đăng nhập' });
         return setTimeout(() => {
-          dispatch(setLoading({ isLoading: false, message: null }));
+          if (setLoading) setLoading({ loading: false });
           router.push('/login');
         }, 5000);
       }
     } catch (error) {
-      dispatch(setLoading({ isLoading: false, message: null }));
+      if (setLoading) setLoading({ loading: false });
       console.log(error);
     }
   };

@@ -2,14 +2,14 @@
 import './Loading.css';
 import { Box, Typography } from '@mui/material';
 import { useAppSelector } from '@/lib/redux/store';
+import { useMyContext } from '@/context/context';
 
 function Loading() {
-  const isLoading = useAppSelector((state) => state.loading.isLoading);
-  const message = useAppSelector((state) => state.loading.message);
+  const { loading } = useMyContext();
 
   return (
     <>
-      {isLoading && (
+      {loading?.loading && (
         <Box
           sx={{
             position: 'fixed',
@@ -26,7 +26,9 @@ function Loading() {
           }}
         >
           <Box className={'loading'}></Box>
-          <Typography variant="h2">{message ? message : "Please wait a moment. I'm in processing..."}</Typography>
+          <Typography variant="h2">
+            {loading.message ? loading.message : "Please wait a moment. I'm in processing..."}
+          </Typography>
         </Box>
       )}
     </>

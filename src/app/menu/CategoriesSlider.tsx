@@ -3,9 +3,8 @@ import Button from '@/components/Button/Button';
 import { Wrapper } from '@/components/Wrapper/Wrapper';
 import { catalogApi } from '@/utils/services/api/catalogApi';
 import { Box } from '@mui/material';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -15,22 +14,17 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 const CategoriesSlider = () => {
   const [catalogs, setCatalogs] = useState([]);
   const searchParams = useSearchParams();
-  const [isB, setIsB] = useState(false);
 
-  // useEffect(() => {
-  //   const slug = `${searchParams}`.replace(/\=/g, '');
-  //   const section = document.getElementById(slug);
-  //   if (section) {
-  //     const offset = section.offsetTop - 150;
-  //     window.scrollTo({ top: offset, behavior: 'smooth' });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isB, searchParams]);
-
-  const checkDefaultEvent = (e: any) => {
-    // e.preventDefault();
-    console.log(e.target.value);
-  };
+  useEffect(() => {
+    const slug = `${searchParams}`.split('&')[0].replace(/\=/g, '');
+    const section = document.getElementById(slug);
+    if (section) {
+      const windowWidth = window.innerWidth;
+      const offset = windowWidth >= 992 ? section.offsetTop - 140 : section.offsetTop - 120;
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   useEffect(() => {
     async function getData() {
@@ -59,7 +53,7 @@ const CategoriesSlider = () => {
     <Box
       sx={{
         position: 'fixed',
-        top: 112,
+        top: { xs: 88, lg: 108 },
         left: '0',
         right: '0',
         zIndex: 1,
@@ -106,11 +100,9 @@ const CategoriesSlider = () => {
             const { name, slug } = item;
             return (
               <SwiperSlide key={index} className={'slider-btn'}>
-                <Link href={`?=${slug}`} onClick={checkDefaultEvent}>
-                  <Button text scale style={{ padding: '8px 24px' }}>
-                    {name}
-                  </Button>
-                </Link>
+                <Button text scale href={`?=${slug}&iat=${Date.now()}`} style={{ padding: '8px 24px' }}>
+                  {name}
+                </Button>
               </SwiperSlide>
             );
           })}

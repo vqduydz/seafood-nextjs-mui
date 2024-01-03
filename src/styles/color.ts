@@ -5,4 +5,5 @@ export const myColors = {
   black: '#000',
   success: 'green',
   error: 'red',
+  grey: '#f3f3f3',
 };

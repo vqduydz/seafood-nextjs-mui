@@ -1,17 +1,19 @@
 'use client';
 
+import { useMyContext } from '@/context/context';
 import { logout } from '@/lib/redux/features/authSlices';
-import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
+import { useAppDispatch } from '@/lib/redux/store';
 import { Logout } from '@mui/icons-material';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import LoginIcon from '@mui/icons-material/Login';
 import { Avatar, Box, Tooltip } from '@mui/material';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import UserAvatar from '../Avatar/Avatar';
 import Button from '../Button/Button';
 import { Wrapper } from '../Wrapper/Wrapper';
+import { setOrderItems } from '@/lib/redux/features/orderSlice';
 
 const UserBox = () => {
   const [anchorElUser, setAnchorElUser] = useState<boolean>(false);
@@ -33,8 +35,7 @@ const UserBox = () => {
     };
   }, []);
 
-  const isLogin = useAppSelector((state) => state.auth.isLogin) as string;
-
+  const isLogin = useMyContext().auth?.isLogin;
   return (
     <>
       <Tooltip title={anchorElUser ? '' : 'Tài khoản'}>
@@ -93,7 +94,11 @@ const UserBox = () => {
                     Đơn hàng của tôi
                   </Button>
                 </Link>
-                <Button text className="user-btn" onClick={() => (setAnchorElUser(false), dispatch(logout()))}>
+                <Button
+                  text
+                  className="user-btn"
+                  onClick={() => (setAnchorElUser(false), dispatch(logout()), dispatch(setOrderItems([])))}
+                >
                   <Logout className="icon" />
                   Đăng xuất
                 </Button>
@@ -121,4 +126,4 @@ const UserBox = () => {
   );
 };
 
-export default UserBox;
+export default memo(UserBox);

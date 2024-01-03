@@ -1,11 +1,11 @@
 import { AppBar, Box } from '@mui/material';
-import Image from 'next/image';
-import Link from 'next/link';
 import Button from '../Button/Button';
 import { Wrapper } from '../Wrapper/Wrapper';
+import MyBadge from './MyBadge';
 import UserBox from './UserBox';
+import { memo } from 'react';
 
-export default function Header() {
+function Header() {
   return (
     <>
       <AppBar position="fixed" sx={{ zIndex: 100, boxShadow: '0px -15px 15px 20px rgba(0,0,0,0.2)' }}>
@@ -22,38 +22,47 @@ export default function Header() {
           <Wrapper
             sx={{
               justifyContent: 'space-between',
+              '.logo': {
+                minWidth: { xs: '200px', lg: '250px' },
+                minHeight: { xs: '60px', lg: '80px' },
+              },
             }}
           >
-            <Link style={{ padding: 0, margin: 0 }} href={'/'}>
-              <Image width="250" height="80" src="/images/logo.png" alt="logo" priority />
-            </Link>
+            <Button
+              link
+              className="logo"
+              style={{
+                backgroundImage: `url(/images/logo.png)`,
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '90% 90%',
+              }}
+              href={'/'}
+            />
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 gap: '15px',
-                button: {
+                '.header-btn': {
                   textTransform: 'uppercase',
                   fontWeight: '900',
-                  fontSize: '1.8rem',
-                  padding: '1.2rem 2.4rem',
+                  fontSize: { xs: '1.6rem', lg: '1.8rem' },
+                  padding: { xs: '0.8rem 2rem', lg: '1.2rem 2.4rem' },
                 },
               }}
             >
-              <Link href={'/menu'}>
-                <Button text_e scale>
-                  Menu
-                </Button>
-              </Link>
-              <Button text_e scale>
+              <Button className="header-btn" link text_e scale href={'/menu'}>
+                Menu
+              </Button>
+              <Button className="header-btn" link text_e scale href={'/menu'}>
                 Đặt bàn
               </Button>
-              <Link href={'/contact'}>
-                <Button text_e scale>
-                  Liên hệ
-                </Button>
-              </Link>
+              <Button className="header-btn" link text_e scale href={'/contact'}>
+                Liên hệ
+              </Button>
             </Box>
+            <MyBadge />
             <UserBox />
           </Wrapper>
         </Box>
@@ -61,3 +70,4 @@ export default function Header() {
     </>
   );
 }
+export default memo(Header);

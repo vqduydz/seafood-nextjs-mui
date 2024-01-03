@@ -2,7 +2,7 @@ import { Wrapper } from '@/components/Wrapper/Wrapper';
 import RenderContent from '@/components/renderContent/RenderContent';
 import { catalogApi } from '@/utils/services/api/catalogApi';
 import { Box, Typography } from '@mui/material';
-import DefaultLayout from '../ShareLayout/DefaultLayout';
+import DefaultLayout from '../../ShareLayout/DefaultLayout';
 import CategoriesSlider from './CategoriesSlider';
 
 async function getData() {

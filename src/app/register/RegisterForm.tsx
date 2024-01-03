@@ -2,8 +2,8 @@
 
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
+import { useMyContext } from '@/context/context';
 import { getToken, login, loginError, setToken } from '@/lib/redux/features/authSlices';
-import { setLoading } from '@/lib/redux/features/loadingSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import useSocket from '@/lib/socket.io/useSocket';
 import { myColors } from '@/styles/color';
@@ -23,6 +23,7 @@ export function RegisterForm() {
   const isLogin = useAppSelector((state) => state.auth.isLogin) as string;
   const router = useRouter();
   const socket = useSocket() as Socket;
+  const { setLoading } = useMyContext();
 
   useEffect(() => {
     if (socket) {
@@ -51,7 +52,7 @@ export function RegisterForm() {
   }, [isLogin, token]);
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    dispatch(setLoading({ isLoading: true, message: 'Hệ thống đang xử lý, vui lòng chờ trong giây lát...' }));
+    if (setLoading) setLoading({ loading: true });
     try {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
@@ -80,7 +81,7 @@ export function RegisterForm() {
     } catch (error) {
       console.log(error);
     } finally {
-      dispatch(setLoading({ isLoading: false, message: null }));
+      if (setLoading) setLoading({ loading: false });
     }
   };
 

@@ -2,8 +2,7 @@
 
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
-import { setLoading } from '@/lib/redux/features/loadingSlice';
-import { useAppDispatch } from '@/lib/redux/store';
+import { useMyContext } from '@/context/context';
 import { myColors } from '@/styles/color';
 import { forgotPasswordApi } from '@/utils/services/api/userApi';
 import { Box, Typography } from '@mui/material';
@@ -13,10 +12,9 @@ export function ForgotPasswordForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const dispatch = useAppDispatch();
-
+  const { setLoading } = useMyContext();
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    dispatch(setLoading({ isLoading: true, message: 'Hệ thống đang xử lý, vui lòng chờ trong giây lát...' }));
+    if (setLoading) setLoading({ loading: true });
     try {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
@@ -36,7 +34,7 @@ export function ForgotPasswordForm() {
     } catch (error) {
       console.log(error);
     } finally {
-      dispatch(setLoading({ isLoading: false, message: null }));
+      if (setLoading) setLoading({ loading: false });
     }
   };
 

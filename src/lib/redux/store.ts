@@ -6,8 +6,8 @@ import { authReducer } from './features/authSlices';
 import CryptoJS from 'crypto-js';
 import createTransform from 'redux-persist/es/createTransform';
 import storage from 'redux-persist/lib/storage';
-import { loadingReducer } from './features/loadingSlice';
 import { languageReducer } from './features/languageSlice';
+import { orderItemsReducer } from './features/orderSlice';
 
 const secretKey: string = process.env.secretKey as string;
 
@@ -38,25 +38,23 @@ const persistConfig = {
     createTransform(
       (inboundState, key) => {
         if (key === 'auth' && inboundState) {
-          const { token, isLogin, currentUser } = inboundState as {
+          const { token, isLogin, currentUserToken } = inboundState as {
             token: string | null;
             isLogin: boolean;
-            currentUser: string | null;
+            currentUserToken: string | null;
           };
-          const encryptedAuthToken = encryptAuthToken(token);
-          return { token: encryptedAuthToken, isLogin, currentUser };
+          return { token: encryptAuthToken(token), isLogin, currentUserToken: encryptAuthToken(currentUserToken) };
         }
         return inboundState;
       },
       (outboundState, key) => {
         if (key === 'auth' && outboundState) {
-          const { token, isLogin, currentUser } = outboundState as {
+          const { token, isLogin, currentUserToken } = outboundState as {
             token: string | null;
             isLogin: boolean;
-            currentUser: string | null;
+            currentUserToken: string | null;
           };
-          const decryptedAuthToken = decryptAuthToken(token);
-          return { token: decryptedAuthToken, isLogin, currentUser };
+          return { token: decryptAuthToken(token), isLogin, currentUserToken: decryptAuthToken(currentUserToken) };
         }
         return outboundState;
       },
@@ -65,7 +63,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  loading: loadingReducer,
+  orderItems: orderItemsReducer,
   auth: authReducer,
   language: languageReducer,
 });

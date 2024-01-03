@@ -59,7 +59,7 @@
 }
 
 .text,
-.text_e,
+.text-e,
 .link {
   letter-spacing: 1px;
   margin: 0;
@@ -71,16 +71,27 @@
   color: #e0592a;
 }
 
-.text_e {
-  &:hover {
-    border-top: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-  }
+.link-n {
+  color: #1976d2;
 }
 .link {
   color: #1976d2;
   &:hover {
     text-decoration: underline;
+  }
+}
+
+.link.text-e {
+  color: #e0592a;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.text-e {
+  &:hover {
+    border-top: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
   }
 }
 
@@ -96,7 +107,8 @@
 }
 
 .disable {
+  z-index: -1;
   cursor: not-allowed;
-  opacity: 0.5;
   user-select: none;
+  opacity: 0.5 !important;
 }

@@ -1,18 +1,18 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-interface InitialState {
-  isLogin: boolean;
-  token: string | null | unknown;
-  error: string | null | unknown;
-  currentUser: string | null;
+export interface AuthState {
+  isLogin?: boolean;
+  token?: string | null | unknown;
+  error?: string | null | unknown;
+  currentUserToken?: string | null;
 }
 
-const initialState: InitialState = {
+const initialState: AuthState = {
   isLogin: false,
   token: null,
   error: null,
-  currentUser: null,
+  currentUserToken: null,
 };
 
 export const getToken = (loginInfo: { email: string | null; password: string | null }) => {
@@ -36,21 +36,21 @@ const auth = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setToken(state, action: PayloadAction<InitialState>) {
+    setToken(state, action: PayloadAction<AuthState>) {
       state.token = action.payload;
       state.error = null;
-      state.currentUser = null;
+      state.currentUserToken = null;
     },
     logout(state) {
       state.token = null;
       state.error = null;
-      state.currentUser = null;
+      state.currentUserToken = null;
       state.isLogin = false;
     },
-    loginError(state, action: PayloadAction<InitialState>) {
+    loginError(state, action: PayloadAction<AuthState>) {
       state.token = null;
-      state.error = action.payload;
-      state.currentUser = null;
+      state.error = action.payload.error;
+      state.currentUserToken = null;
       state.isLogin = false;
     },
   },
@@ -58,12 +58,12 @@ const auth = createSlice({
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
       state.error = null;
-      state.currentUser = action.payload;
+      state.currentUserToken = action.payload;
       state.isLogin = true;
     });
     builder.addCase(login.rejected, (state, action) => {
       state.error = action.payload;
-      state.currentUser = null;
+      state.currentUserToken = null;
       state.isLogin = false;
     });
   },

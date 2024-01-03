@@ -1,11 +1,12 @@
 import React, { CSSProperties, ReactNode } from 'react';
-import './Button.css';
+import '../Button/Button.css';
 import Link from 'next/link';
 
-interface ButtonProps {
+export interface ButtonProps {
   onClick?: (event?: React.MouseEvent<HTMLElement>) => void;
   outline?: boolean;
   link?: boolean;
+  link_n?: boolean;
   primary?: boolean;
   text?: boolean;
   text_e?: boolean;
@@ -14,16 +15,20 @@ interface ButtonProps {
   disable?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
-  className?: string;
   children?: ReactNode;
-  style?: CSSProperties;
+  //
   href?: string;
+  target?: string;
+  //
+  className?: string;
+  style?: CSSProperties;
 }
 
 const Button = ({
   onClick,
   outline = false,
   link = false,
+  link_n = false,
   primary = false,
   text = false,
   text_e = false,
@@ -36,10 +41,11 @@ const Button = ({
   children,
   style,
   href,
+  target,
   ...passProps
 }: ButtonProps) => {
   let Comp: React.ElementType = 'button';
-  const props = { href, onClick, ...passProps };
+  const props = { href, target, onClick, ...passProps };
 
   const propsWithIndexSignature: { [key: string]: any } = props;
 
@@ -55,7 +61,8 @@ const Button = ({
 
   if (href) {
     props.href = href;
-    Comp = Link;
+    if (target) props.target = target;
+    Comp = Link as React.ElementType;
   }
 
   const classes = [
@@ -63,8 +70,9 @@ const Button = ({
     outline && 'outline',
     primary && 'primary',
     text && 'text',
-    text_e && 'text_e',
+    text_e && 'text-e',
     link && 'link',
+    link_n && 'link-n',
     scale && 'scale',
     disable && 'disable',
     active && 'active',

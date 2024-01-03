@@ -9,7 +9,7 @@ export default function AuthWrapper({ children, sx }: { children: ReactNode; sx?
   return (
     <Box
       sx={{
-        backgroundImage: "url('https://colorlib.com/etc/lf/Login_v3/images/bg-01.jpg')",
+        backgroundImage: "url('/images/bg-01.jpg')",
         width: '100%',
         minHeight: '100vh',
         display: 'flex',

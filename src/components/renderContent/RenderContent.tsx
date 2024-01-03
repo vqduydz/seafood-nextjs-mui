@@ -1,9 +1,10 @@
 'use client';
+import { myColors } from '@/styles/color';
 import capitalize from '@/utils/capitalize';
 import renderPrice from '@/utils/renderPrice';
 import { Box, Typography } from '@mui/material';
-import Link from 'next/link';
-import AddToCart from '../AddToCart/AddToCart';
+import AddToCart from '../AddToCartBtn/AddToCartBtn';
+import Button from '../Button/Button';
 
 interface RenderProps {
   items: {
@@ -12,6 +13,7 @@ interface RenderProps {
     slug: string;
     unit: string;
     price: number;
+    id: number;
   }[];
   imagePath: string;
 }
@@ -31,14 +33,11 @@ const RenderContent = ({ imagePath, items }: RenderProps) => {
           '.image': {
             transform: 'scale(1.04)',
           },
-          '.name': {
-            color: '#337ab7',
-          },
           '& button': { visibility: 'visible', opacity: 0.8, ':hover': { opacity: 1 } },
         },
       }}
     >
-      <Link href={`/detail?slug=${item?.slug}`} style={{ width: '100%' }}>
+      <Button link_n href={`/detail?slug=${item?.slug}`} style={{ width: '100%', padding: 0 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', ':hover': {} }}>
           <Box sx={{ width: '100%', overflow: 'hidden', borderRadius: '6px' }}>
             <Box
@@ -66,7 +65,7 @@ const RenderContent = ({ imagePath, items }: RenderProps) => {
               alignItems: 'start',
             }}
           >
-            <Typography width={'100%'} display={'block'} className="name" fontWeight={700}>
+            <Typography width={'100%'} display={'block'} fontWeight={700}>
               {capitalize(item.name)}
             </Typography>
 
@@ -81,14 +80,14 @@ const RenderContent = ({ imagePath, items }: RenderProps) => {
                 alignItems: 'center',
               }}
             >
-              <Typography sx={{ fontSize: '1.5rem', color: '#e0592a' }}>
+              <Typography sx={{ fontSize: '1.5rem', color: myColors.primary }}>
                 {item.price ? renderPrice(item.price) : item.price}
               </Typography>
             </Box>
           </Box>
         </Box>
-      </Link>
-      <AddToCart />
+      </Button>
+      <AddToCart menu_id={item.id} />
     </Box>
   ));
 };

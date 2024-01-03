@@ -1,6 +1,6 @@
 import MySlider from '@/components/Slider/MySlider';
 import { catalogApi } from '@/utils/services/api/catalogApi';
-import DefaultLayout from './ShareLayout/DefaultLayout';
+import DefaultLayout from '../ShareLayout/DefaultLayout';
 
 async function getData() {
   const res = await catalogApi();

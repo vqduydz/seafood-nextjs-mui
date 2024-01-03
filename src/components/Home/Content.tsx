@@ -1,9 +1,7 @@
-import { Box, Typography } from '@mui/material';
-import { AddShoppingCart } from '@mui/icons-material';
 import renderPrice from '@/utils/renderPrice';
-import Link from 'next/link';
+import { Box, Typography } from '@mui/material';
+import AddToCartBtn from '../AddToCartBtn/AddToCartBtn';
 import Button from '../Button/Button';
-import AddToCart from '../AddToCart/AddToCart';
 
 interface DynamicField {
   item: {
@@ -11,6 +9,7 @@ interface DynamicField {
     name: string;
     slug: string;
     price: number;
+    id: number;
   };
   imagePath: string;
 }
@@ -23,21 +22,7 @@ interface ContentProps<T> {
 
 function Content({ data, menu = false, quantity }: ContentProps<DynamicField>) {
   const { item, imagePath } = data;
-  const { image, name, slug, price } = item;
-
-  // useEffect(() => {
-  //   if (window.location.hash === '#id1') {
-  //     const element = ReactDOM.findDOMNode(document.getElementById('id1'));
-  //     if (element) {
-  //       element.scrollIntoView();
-  //     }
-  //   } else if (window.location.hash === '#id2') {
-  //     const element = ReactDOM.findDOMNode(document.getElementById('id2'));
-  //     if (element) {
-  //       element.scrollIntoView();
-  //     }
-  //   }
-  // }, []);
+  const { image, name, slug, price, id } = item;
 
   return (
     <Box
@@ -64,7 +49,8 @@ function Content({ data, menu = false, quantity }: ContentProps<DynamicField>) {
         },
       }}
     >
-      <Link
+      <Button
+        link_n
         href={menu ? `/detail?slug=${slug}` : `/menu?=${slug}`}
         style={{
           padding: 0,
@@ -120,8 +106,8 @@ function Content({ data, menu = false, quantity }: ContentProps<DynamicField>) {
             </Box>
           </Box>
         </Box>
-      </Link>
-      {menu && <AddToCart />}
+      </Button>
+      {menu && <AddToCartBtn menu_id={id} />}
     </Box>
   );
 }

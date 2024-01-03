@@ -125,14 +125,14 @@ export default function MySlider({ data, sx, headerSlider, menu }: MySliderProps
           }}
           modules={[Autoplay, Pagination, Navigation]}
         >
-          {items.map((item, index: number) => {
-            const { image, name, slug, price } = item;
+          {items.map((item) => {
+            const { image, name, slug, price, id } = item;
             return (
-              <SwiperSlide key={index}>
+              <SwiperSlide key={id}>
                 <Content
                   quantity={items.length}
                   menu={menu}
-                  data={{ item: { image, name, slug, price }, imagePath: imagePath }}
+                  data={{ item: { image, name, slug, price, id }, imagePath: imagePath }}
                 />
               </SwiperSlide>
             );

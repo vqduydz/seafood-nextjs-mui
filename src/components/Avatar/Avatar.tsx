@@ -24,7 +24,7 @@ interface IcurrentUser {
 
 function UserAvatar(sx: Props) {
   const [currentUser, setCurrentUser] = useState<IcurrentUser>();
-  const currentUserToken = useAppSelector((state) => state.auth.currentUser) as string;
+  const currentUserToken = useAppSelector((state) => state.auth.currentUserToken) as string;
 
   useEffect(() => {
     if (currentUserToken) {

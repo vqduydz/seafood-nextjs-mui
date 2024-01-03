@@ -18,10 +18,10 @@ export function Wrapper({ children, sx, className }: WrapperProps) {
   };
 
   const StyledWrapper = styled('div')(({ theme }) => ({
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('xs')]: {
       maxWidth: '768px',
-      paddingRight: '0.1rem',
-      paddingLeft: '0.1rem',
+      paddingRight: '0.5rem',
+      paddingLeft: '0.5rem',
     },
     [theme.breakpoints.up('lg')]: {
       maxWidth: '992px',
