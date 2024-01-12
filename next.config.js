@@ -24,6 +24,8 @@ const nextConfig = {
     apiEndpoint: 'http://192.168.1.250:8080/v1/api',
     backendUrl: 'http://192.168.1.250:8080/',
     secretKey: 'myCryptoJS',
+    REACT_APP_GOOGLE_MAPS_API_KEY: 'AIzaSyBN9XkKOtu7xtxh0NwuEXILfHpn0ZSmfD4',
+    REACT_APP_GOONG_API_KEY: 'hXqN5VLZ8jK6CPWKhe5ygeEUdfxA5E68ZCj3yaUN',
   },
 };
 

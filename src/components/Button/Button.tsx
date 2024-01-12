@@ -2,8 +2,8 @@ import React, { CSSProperties, ReactNode } from 'react';
 import '../Button/Button.css';
 import Link from 'next/link';
 
-export interface ButtonProps {
-  onClick?: (event?: React.MouseEvent<HTMLElement>) => void;
+export interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
+  // onClick?: (event?: React.MouseEvent<HTMLElement>) => void;
   outline?: boolean;
   link?: boolean;
   link_n?: boolean;
@@ -25,7 +25,7 @@ export interface ButtonProps {
 }
 
 const Button = ({
-  onClick,
+  // onClick,
   outline = false,
   link = false,
   link_n = false,
@@ -45,7 +45,7 @@ const Button = ({
   ...passProps
 }: ButtonProps) => {
   let Comp: React.ElementType = 'button';
-  const props = { href, target, onClick, ...passProps };
+  const props = { href, target, ...passProps };
 
   const propsWithIndexSignature: { [key: string]: any } = props;
 
@@ -56,6 +56,8 @@ const Button = ({
       }
     });
   }
+
+  const handleClick = disable ? undefined : passProps.onClick;
 
   // ...
 
@@ -82,7 +84,7 @@ const Button = ({
     .join(' ');
 
   return (
-    <Comp className={classes} {...props} style={style}>
+    <Comp className={classes} onClick={handleClick} {...props} style={style}>
       {leftIcon && <span className="icon">{leftIcon}</span>}
       <span className="title">{children}</span>
       {rightIcon && <span className="icon">{rightIcon}</span>}

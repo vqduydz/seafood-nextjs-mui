@@ -1,12 +1,12 @@
 'use client';
-import Button from '@/components/Button/Button';
+import AddToCartBtn from '@/components/AddToCartBtn/AddToCartBtn';
 import { Wrapper } from '@/components/Wrapper/Wrapper';
 import RenderContent from '@/components/renderContent/RenderContent';
 import capitalize from '@/utils/capitalize';
 import dateTimeFormate from '@/utils/dateTimeFormate';
 import renderPrice from '@/utils/renderPrice';
 import { catalogApi } from '@/utils/services/api/catalogApi';
-import { feedbackApi } from '@/utils/services/api/feedbackapi';
+import { getFeedbackApi } from '@/utils/services/api/feedbackapi';
 import { menuApi } from '@/utils/services/api/menuApi';
 import AddShoppingCartSharpIcon from '@mui/icons-material/AddShoppingCartSharp';
 import { Box, Rating, Typography } from '@mui/material';
@@ -47,8 +47,7 @@ function ItemDetail() {
     feedback_code: string;
     createdAt: string;
     updatedAt: string;
-    firstName: string;
-    lastName: string;
+    name: string;
     avatar: string;
   }
 
@@ -77,8 +76,7 @@ function ItemDetail() {
         const menu = await menuApi({ slug: _slug });
         setMenu(menu.data);
         if (menu.data && menu.data.id) {
-          const feedbacks = await feedbackApi({ menu_id: menu.data.id });
-
+          const feedbacks = await getFeedbackApi({ menu_id: menu.data.id });
           setFeedbacks(feedbacks.data);
           setRateValue({
             soluot: parseFloat(feedbacks.data.length),
@@ -188,9 +186,9 @@ function ItemDetail() {
                 </Typography>
               </Box>
 
-              <Button primary className="add-to-cart">
+              <AddToCartBtn main menu_id={id} props={{ className: 'add-to-cart', primary: true }}>
                 <AddShoppingCartSharpIcon sx={{ mr: '5px' }} /> Thêm vào giỏ hàng
-              </Button>
+              </AddToCartBtn>
             </Box>
           </Box>
         </Wrapper>
@@ -232,7 +230,7 @@ function ItemDetail() {
                     borderRadius: '6px',
                     padding: '5px 10px',
                     backgroundColor: '#fae0e069',
-                    border: '1px solid #0000000a',
+                    border: '1px solid #00000022',
                     display: 'flex',
                     flexDirection: 'column',
                   }}
@@ -254,7 +252,7 @@ function ItemDetail() {
                     <Typography fontSize={'1.4rem'}>{dateTimeFormate(item.createdAt)}</Typography>
                   </Box>
                   <Typography display={'inline-flex'} fontSize={'1.6rem'} fontWeight={500}>
-                    Bởi :&nbsp;{`${item.firstName} ${item.lastName}`}
+                    Bởi :&nbsp;{`${item.name}`}
                   </Typography>
                   {item.feedback_content && (
                     <Typography display={'inline-flex'} fontSize={'1.6rem'} fontWeight={500}>

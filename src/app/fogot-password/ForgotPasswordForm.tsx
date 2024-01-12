@@ -6,13 +6,22 @@ import { useMyContext } from '@/context/context';
 import { myColors } from '@/styles/color';
 import { forgotPasswordApi } from '@/utils/services/api/userApi';
 import { Box, Typography } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useEffect, useState } from 'react';
 
 export function ForgotPasswordForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
   const { setLoading } = useMyContext();
+  const router = useRouter();
+  const { auth } = useMyContext();
+  const isLogin = auth?.isLogin;
+
+  useEffect(() => {
+    if (isLogin) router.push('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLogin]);
+
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     if (setLoading) setLoading({ loading: true });
     try {
@@ -45,7 +54,6 @@ export function ForgotPasswordForm() {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            legend: { textAlign: 'center' },
           }}
         >
           <MyTextField
@@ -56,6 +64,7 @@ export function ForgotPasswordForm() {
               label: 'Email',
               id: 'email',
               type: 'email',
+              autoComplete: 'email',
             }}
           />
 

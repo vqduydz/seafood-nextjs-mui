@@ -1,4 +1,4 @@
-const dateTimeFormate = (value: string) => {
+const dateTimeFormate = (value: string | number | Date) => {
   const time = new Date(value);
 
   return (

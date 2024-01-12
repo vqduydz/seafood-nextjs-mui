@@ -11,8 +11,8 @@ import 'swiper/css/pagination';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-const CategoriesSlider = () => {
-  const [catalogs, setCatalogs] = useState([]);
+const CategoriesSlider = ({ newcatalogsWithMenus }: { newcatalogsWithMenus: any[] }) => {
+  // const [catalogs, setCatalogs] = useState([]);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -25,29 +25,6 @@ const CategoriesSlider = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-
-  useEffect(() => {
-    async function getData() {
-      const response = await catalogApi();
-      const catalogs = response?.data?.catalogsWithMenus;
-
-      catalogs.sort((a: any, b: any) => {
-        if (a.slug === 'mon-dac-biet') return -1;
-        if (b.slug === 'mon-dac-biet') return 1;
-        if (a.slug === 'cac-mon-moi') return -1;
-        if (b.slug === 'cac-mon-moi') return 1;
-        if (a.room === 'nuoc-ngot') return 1;
-        if (b.room === 'nuoc-ngot') return -1;
-        if (a.room === 'bia') return 1;
-        if (b.room === 'bia') return -1;
-        if (a.room === 'ruou') return -1;
-        if (b.room === 'ruou') return 1;
-        return 0;
-      });
-      setCatalogs(catalogs);
-    }
-    getData();
-  }, []);
 
   return (
     <Box
@@ -96,7 +73,7 @@ const CategoriesSlider = () => {
           slidesPerView={'auto'}
           modules={[Autoplay, Pagination, Navigation]}
         >
-          {catalogs.map((item, index: number) => {
+          {newcatalogsWithMenus.map((item, index: number) => {
             const { name, slug } = item;
             return (
               <SwiperSlide key={index} className={'slider-btn'}>

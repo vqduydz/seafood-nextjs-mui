@@ -14,6 +14,7 @@ import UserAvatar from '../Avatar/Avatar';
 import Button from '../Button/Button';
 import { Wrapper } from '../Wrapper/Wrapper';
 import { setOrderItems } from '@/lib/redux/features/orderSlice';
+import { myColors } from '@/styles/color';
 
 const UserBox = () => {
   const [anchorElUser, setAnchorElUser] = useState<boolean>(false);
@@ -71,29 +72,26 @@ const UserBox = () => {
                 width: '100%',
                 display: 'flex',
                 pr: '25px',
+                color: myColors.primary,
                 '.title': { justifyContent: 'start' },
                 '+.user-btn': { borderTop: '1px solid #e0592a57' },
-                '.icon': { width: '40px', backgroundColor: 'transparent', color: ' #e0592a', mr: '10px' },
+                '.icon': { width: '40px', backgroundColor: 'transparent', color: myColors.primary, mr: '10px' },
                 ':hover': {
-                  backgroundColor: '#0000000a',
+                  backgroundColor: '#00000022',
                 },
               },
             }}
           >
             {isLogin ? (
               <>
-                <Link className="user-btn" href={'#'} onClick={() => setAnchorElUser(false)}>
-                  <Button text style={{ padding: 0 }}>
-                    <Avatar className="icon" />
-                    Quản lý tài khoản
-                  </Button>
-                </Link>
-                <Link className="user-btn" href={'#'} onClick={() => setAnchorElUser(false)}>
-                  <Button text style={{ padding: 0 }}>
-                    <ListAltIcon className="icon" />
-                    Đơn hàng của tôi
-                  </Button>
-                </Link>
+                <Button className="user-btn" link_n href={'#'} onClick={() => setAnchorElUser(false)}>
+                  <Avatar className="icon" />
+                  Quản lý tài khoản
+                </Button>
+                <Button className="user-btn" link_n href={'/orders'} onClick={() => setAnchorElUser(false)}>
+                  <ListAltIcon className="icon" />
+                  Đơn hàng của tôi
+                </Button>
                 <Button
                   text
                   className="user-btn"

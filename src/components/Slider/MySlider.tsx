@@ -3,11 +3,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import { Box, SxProps, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Content from '../Home/Content';
 
+import { SxMui } from '@/interface/interface';
 import Link from 'next/link';
 import Button from '../Button/Button';
 import { Wrapper } from '../Wrapper/Wrapper';
@@ -16,19 +17,19 @@ import { Wrapper } from '../Wrapper/Wrapper';
 
 interface MySliderProps {
   menu?: boolean;
-  sx?: SxProps;
+  sx?: SxMui;
   data: {
     items: Record<string, any>[]; // Define the type for items with dynamic fields
     imagePath: string;
   };
   headerSlider?: {
     title: string;
-    headerSliderStyles?: SxProps;
+    headerSliderStyles?: SxMui;
     extendTitle?: {
       title: string;
       url: string;
     };
-    titleStyles?: SxProps;
+    titleStyles?: SxMui;
   };
 }
 

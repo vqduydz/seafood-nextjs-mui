@@ -1,6 +1,14 @@
 ::-webkit-scrollbar {
   display: none; /* Ẩn thanh cuộn trình duyệt Chrome và Safari */
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
 html {
   font-size: 62.5%;
   min-width: 320px;

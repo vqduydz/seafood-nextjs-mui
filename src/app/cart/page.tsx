@@ -198,11 +198,12 @@ const Cart = () => {
         <Box sx={{ width: '100%' }}>
           <Box
             sx={{
+              zIndex: 2,
               position: 'sticky',
               top: { xs: '88px', lg: '108px' },
               padding: '15px 10px',
               backgroundColor: myColors.grey,
-              border: '1px solid #0000000a',
+              border: '1px solid #00000022',
               display: 'flex',
               flexDirection: 'row',
               textAlign: 'center',
@@ -224,7 +225,7 @@ const Cart = () => {
                   }}
                 />
               </label>
-              <Typography fontWeight={700}>Sản phẩm</Typography>
+              <Typography sx={{ fontWeight: 700 }}>Sản phẩm</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
               <Typography sx={{ display: 'block', width: '100px', fontWeight: 700 }}>Đơn giá</Typography>
@@ -242,7 +243,7 @@ const Cart = () => {
                   sx={{
                     padding: '15px 10px',
                     backgroundColor: '#00000005',
-                    border: '1px solid #0000000a',
+                    border: '1px solid #00000022',
                     display: 'flex',
                     textAlign: 'center',
                     gap: '10px',
@@ -288,10 +289,13 @@ const Cart = () => {
                         alignItems: 'center',
                       }}
                     >
-                      <Button href={`/detail?slug=${slug}`} target="_blank">
-                        <Typography color={'#337ab7'} textAlign={'left'} fontSize={'1.6rem'} fontWeight={500}>
-                          {name}
-                        </Typography>
+                      <Button
+                        link
+                        style={{ padding: 0, fontWeight: 500 }}
+                        href={`/detail?slug=${slug}`}
+                        target="_blank"
+                      >
+                        {name}
                       </Button>
                       <Box
                         sx={{
@@ -305,7 +309,6 @@ const Cart = () => {
                       >
                         <Typography
                           sx={{ display: 'block', width: '100px' }}
-                          mt={2}
                           fontSize={'1.6rem'}
                           fontWeight={500}
                           color={myColors.primary}
@@ -341,7 +344,16 @@ const Cart = () => {
               );
             })}
 
-            <Box sx={{ position: 'sticky', bottom: '0', backgroundColor: myColors.white, mb: '20px' }}>
+            <Box
+              sx={{
+                position: 'sticky',
+                border: '1px solid #00000022 ',
+                bottom: '0',
+                backgroundColor: myColors.white,
+                mb: '20px',
+                zIndex: 2,
+              }}
+            >
               <Box
                 sx={{
                   display: 'flex',
@@ -350,7 +362,7 @@ const Cart = () => {
                   gap: '30px',
                   justifyContent: 'end',
                   alignItems: 'center',
-                  margin: '20px 0',
+                  margin: '10px ',
                   color: myColors.primary,
                 }}
               >
@@ -371,7 +383,7 @@ const Cart = () => {
                 )}
               </Box>
 
-              <Box sx={{ '& *': { fontWeight: 500 } }}>
+              <Box sx={{ '& *': { fontWeight: 500 }, margin: '10px ' }}>
                 <Typography sx={{ textAlign: 'right' }}>
                   Đơn hàng trên <span style={{ fontWeight: 700, color: myColors.primary }}>{renderPrice(2000000)}</span>{' '}
                   được miễn phí giao hàng
@@ -399,6 +411,7 @@ const Cart = () => {
             flexDirection: 'column',
             gap: '10px',
             alignItems: 'center',
+            width: '100%',
           }}
         >
           <Box

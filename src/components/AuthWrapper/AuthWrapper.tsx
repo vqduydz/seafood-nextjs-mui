@@ -1,11 +1,11 @@
-import { SxProps } from '@mui/material';
+import { SxMui } from '@/interface/interface';
 import Box from '@mui/material/Box';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
-export default function AuthWrapper({ children, sx }: { children: ReactNode; sx?: SxProps }) {
+export default function AuthWrapper({ children, sx }: { children: ReactNode; sx?: SxMui }) {
   return (
     <Box
       sx={{

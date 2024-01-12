@@ -15,11 +15,6 @@ const initialState: AuthState = {
   currentUserToken: null,
 };
 
-export const getToken = (loginInfo: { email: string | null; password: string | null }) => {
-  const socket = io(process.env.backendUrl as string, { transports: ['websocket'] });
-  socket.emit('getToken', loginInfo);
-};
-
 export const login = createAsyncThunk('auth/login', async (token: string, thunkAPI) => {
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 

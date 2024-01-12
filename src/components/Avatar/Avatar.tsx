@@ -8,7 +8,7 @@ interface Props {
   sx?: CSSProperties;
 }
 
-interface IcurrentUser {
+interface IUser {
   id: number | null;
   email: string | null;
   name: string;
@@ -23,12 +23,12 @@ interface IcurrentUser {
 }
 
 function UserAvatar(sx: Props) {
-  const [currentUser, setCurrentUser] = useState<IcurrentUser>();
+  const [currentUser, setCurrentUser] = useState<IUser>();
   const currentUserToken = useAppSelector((state) => state.auth.currentUserToken) as string;
 
   useEffect(() => {
     if (currentUserToken) {
-      const decodedToken = jwtDecode(currentUserToken) as IcurrentUser;
+      const decodedToken = jwtDecode(currentUserToken) as IUser;
       setCurrentUser(decodedToken);
     }
   }, [currentUserToken]);

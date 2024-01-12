@@ -107,8 +107,14 @@
 }
 
 .disable {
-  z-index: -1;
-  cursor: not-allowed;
+  z-index: 1;
+  cursor: default;
   user-select: none;
-  opacity: 0.5 !important;
+  opacity: 0.5;
+  &:hover {
+    z-index: 1;
+    cursor: default;
+    user-select: none;
+    opacity: 0.5;
+  }
 }

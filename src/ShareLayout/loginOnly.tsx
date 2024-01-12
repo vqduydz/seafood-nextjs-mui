@@ -68,7 +68,7 @@ const loginOnly = (WrappedComponent: React.ComponentType) => {
       >
         <Box textAlign={'center'} color={myColors.primary}>
           <Typography fontSize={'2rem'} fontWeight={700}>
-            Liên kết này cần đăng nhập để truy cập.{' '}
+            Liên kết này cần đăng nhập để truy cập.
           </Typography>
           <Typography fontSize={'2rem'} fontWeight={700}>
             Tự động chuyển đến đăng nhập sau {countdown} giây.

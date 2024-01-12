@@ -1,14 +1,22 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
-import { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 
 import Button from '@/components/Button/Button';
+import MyTextField from '../MyTextField/MyTextField';
 interface IDropDown {
-  dropList: [];
-  setResult: [];
-  result: [];
-  style: CSSProperties;
-  input: { status: false; inputLabel: ''; placeholder: ''; setSearchValue: () => {}; searchValue: '' };
+  dropList: string[] | [];
+  setResult: React.Dispatch<React.SetStateAction<string>> | (() => void);
+  result: string;
+  style?: CSSProperties;
+  input?: {
+    isAddress?: boolean;
+    inputLabel?: string;
+    placeholder?: string;
+    searchValue?: string;
+    setSearchValue?: React.Dispatch<React.SetStateAction<string>> | (() => void);
+    name?: string;
+    id?: string;
+  };
 }
 
 function DropDown({
@@ -16,29 +24,41 @@ function DropDown({
   setResult,
   result,
   style = {},
-  input = { status: false, inputLabel: '', placeholder: '', setSearchValue: () => {}, searchValue: '' },
-}) {
-  const { status, inputLabel, placeholder, setSearchValue, searchValue } = input;
+  input = {
+    isAddress: false,
+    inputLabel: '',
+    placeholder: '',
+    setSearchValue: () => {},
+    searchValue: '',
+    name: '',
+    id: '',
+  },
+}: IDropDown) {
+  const { isAddress, inputLabel, placeholder, setSearchValue, searchValue, name, id } = input;
   const [show, setShow] = useState(false);
+
   const showList = () => {
     setShow(true);
   };
+
   const hideList = () => {
     setTimeout(() => {
       setShow(false);
     }, 300);
   };
-  const handleClick = (e, a) => {
-    e.preventDefault();
+
+  const handleClick = (a: string) => {
     setResult(a);
+    setShow(false);
   };
+
   const renderDropList = () => {
     return (
       <Box sx={{ '& *': { textAlign: 'left' } }}>
-        {dropList.map((a, i) => {
+        {dropList.map((item, i) => {
           return (
             <Button
-              tyle={'button'}
+              type="button"
               style={{
                 width: '100%',
                 padding: '5px 10px',
@@ -46,13 +66,14 @@ function DropDown({
                 borderBottom: '1px solid #f5f5f5',
               }}
               key={i}
-              onClick={(e) => {
-                handleClick(e, a);
-                setSearchValue(a);
+              onMouseUp={() => {
+                handleClick(item);
+                if (setSearchValue) setSearchValue(item);
+                setResult(item);
               }}
             >
               <Typography width={'100%'} variant="h5" fontSize={'1.4rem'}>
-                {a}
+                {item}
               </Typography>
             </Button>
           );
@@ -60,6 +81,7 @@ function DropDown({
       </Box>
     );
   };
+
   return (
     <Box
       className="asdasdasdas"
@@ -72,41 +94,62 @@ function DropDown({
         ...style,
       }}
     >
-      {status ? (
-        <MyTextField
-          onChange={(e) => {
-            const searchValue = e.target.value.replace(/ + /g, ' ');
-            if (!searchValue.startsWith(' ')) {
-              setSearchValue(searchValue);
-            } else {
-              setSearchValue('');
-            }
-            if (!searchValue.trim()) {
-              setSearchValue('');
-            }
-          }}
-          onBlur={hideList}
-          onFocus={showList}
-          size="small"
-          fullWidth
-          value={searchValue || result || ''}
-          label={inputLabel}
-          type="text"
-          placeholder={placeholder}
-        />
+      {isAddress ? (
+        <>
+          <MyTextField
+            props={{
+              onChange: (e) => {
+                const searchValue = e.target.value.replace(/ + /g, ' ');
+                if (!searchValue.startsWith(' ')) {
+                  if (setSearchValue) setSearchValue(searchValue);
+                  setResult(searchValue);
+                } else {
+                  if (setSearchValue) setSearchValue('');
+                  setResult('');
+                }
+                if (!searchValue.trim()) {
+                  if (setSearchValue) setSearchValue('');
+                  setResult('');
+                }
+              },
+              onBlur: () => {
+                hideList();
+              },
+              onFocus: () => {
+                showList();
+              },
+              size: 'small',
+              value: searchValue,
+              label: inputLabel,
+              type: 'text',
+              placeholder: placeholder,
+              name,
+              id,
+            }}
+          />
+        </>
       ) : (
         <MyTextField
-          onBlur={hideList}
-          onFocus={showList}
-          size="small"
-          fullWidth
-          value={result || dropList[0] | ''}
-          inputProps={{
-            readOnly: true,
+          props={{
+            onBlur: () => {
+              hideList();
+            },
+            onFocus: () => {
+              showList();
+            },
+            size: 'small',
+            label: inputLabel,
+            type: 'text',
+            placeholder: placeholder,
+            value: result || '',
+            inputProps: {
+              readOnly: true,
+            },
+            required: true,
           }}
-          required
         />
       )}
+
       {show && (
         <Box
           sx={{

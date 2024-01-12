@@ -24,6 +24,7 @@ export default function ScrollTopBtn() {
         window.scrollTo(0, 0);
       }}
       style={{
+        zIndex: 9999,
         position: 'fixed',
         right: '20px',
         bottom: '20px',

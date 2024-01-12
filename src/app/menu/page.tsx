@@ -13,7 +13,8 @@ async function getData() {
 const Menu = async () => {
   const data = await getData();
   const { catalogsWithMenus, imagePath } = data?.data;
-  catalogsWithMenus.sort((a: any, b: any) => {
+
+  const newcatalogsWithMenus = catalogsWithMenus.sort((a: any, b: any) => {
     if (a.slug === 'mon-dac-biet') return -1;
     if (b.slug === 'mon-dac-biet') return 1;
     if (a.slug === 'cac-mon-moi') return -1;
@@ -25,13 +26,13 @@ const Menu = async () => {
     if (a.room === 'ruou') return -1;
     if (b.room === 'ruou') return 1;
     return 0;
-  });
+  }) as any[];
 
   return (
     <DefaultLayout>
-      <CategoriesSlider />
+      <CategoriesSlider newcatalogsWithMenus={newcatalogsWithMenus} />
       <Box sx={{ mt: '50px' }}>
-        {catalogsWithMenus.map((item: any, index: number) => {
+        {newcatalogsWithMenus.map((item: any, index: number) => {
           return (
             <Box
               // className="scrollspy-categories"

@@ -52,6 +52,12 @@ export const axiosService = axios.create({
   baseURL: process.env.apiEndpoint,
 });
 
+export const setHeader = (token?: string) => {
+  return token
+    ? { Authorization: `Bearer ${token}`, 'Content-type': 'application/json' }
+    : { 'Content-type': 'application/json' };
+};
+
 axiosService.interceptors.request.use(async (config: any) => {
   (config.headers = {
     'Content-type': 'application/json',

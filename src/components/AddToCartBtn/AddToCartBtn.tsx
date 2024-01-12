@@ -4,24 +4,25 @@ import { useMyContext } from '@/context/context';
 import { myColors } from '@/styles/color';
 import { handleAddToCartApi } from '@/utils/services/api/cartItemApi';
 import { AddShoppingCart } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 import Button, { ButtonProps } from '../Button/Button';
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+import { ReactNode } from 'react';
 interface IAddToCartBtn {
   props?: ButtonProps;
   menu_id: number;
+  main?: boolean;
+  children?: ReactNode;
 }
 
-export default function AddToCartBtn({ props, menu_id }: IAddToCartBtn) {
+export default function AddToCartBtn({ props, menu_id, main, children }: IAddToCartBtn) {
   const { style: originalStyle, ...otherProps } = props || {};
 
-  const { currentUser, setLoading, handleGetCartItems } = useMyContext();
+  const { currentUser, handleGetCartItems } = useMyContext();
   const { enqueueSnackbar } = useSnackbar();
   const handleAddCart = async () => {
-    // if (setLoading) setLoading({ loading: true });
     try {
       if (currentUser && currentUser.id) {
         const res = await handleAddToCartApi({ customer_id: currentUser?.id, menu_id: menu_id });
-        // if (setLoading) setLoading({ loading: false });
         if (res.data && res.data.error) {
           enqueueSnackbar(res.data.error as string, { variant: 'error' });
         }
@@ -32,27 +33,29 @@ export default function AddToCartBtn({ props, menu_id }: IAddToCartBtn) {
         return;
       }
     } catch (error) {
-      // if (setLoading) setLoading({ loading: false });
       console.log(error);
-    } finally {
     }
   };
 
   return (
     <Button
-      style={{
-        padding: '12px',
-        borderRadius: '50%',
-        position: 'absolute',
-        right: '5%',
-        backgroundColor: myColors.primary,
-        color: myColors.white,
-        ...originalStyle,
-      }}
+      style={
+        children
+          ? { ...originalStyle }
+          : {
+              padding: '12px',
+              borderRadius: '50%',
+              position: 'absolute',
+              right: '5%',
+              backgroundColor: myColors.primary,
+              color: myColors.white,
+              ...originalStyle,
+            }
+      }
       onClick={handleAddCart}
       {...otherProps}
     >
-      <AddShoppingCart />
+      {children ? children : <AddShoppingCart />}
     </Button>
   );
 }

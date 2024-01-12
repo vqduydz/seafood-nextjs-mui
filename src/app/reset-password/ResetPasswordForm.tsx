@@ -59,7 +59,6 @@ export function ResetPasswordForm() {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            legend: { textAlign: 'center' },
           }}
         >
           <MyTextField

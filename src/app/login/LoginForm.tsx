@@ -3,7 +3,7 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { useMyContext } from '@/context/context';
-import { getToken, login, loginError } from '@/lib/redux/features/authSlices';
+import { login, loginError, setToken } from '@/lib/redux/features/authSlices';
 import { useAppDispatch } from '@/lib/redux/store';
 import { myColors } from '@/styles/color';
 import { Box, Typography } from '@mui/material';
@@ -14,7 +14,7 @@ export function LoginForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { auth } = useMyContext();
+  const { auth, emitEvent, listenToEvent } = useMyContext();
   const isLogin = auth?.isLogin;
   const token = auth?.token as string;
   const error = auth?.error as string | null;
@@ -29,7 +29,7 @@ export function LoginForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLogin, token]);
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(loginError({ error: null }));
     const data = new FormData(e.currentTarget);
@@ -37,7 +37,15 @@ export function LoginForm() {
       email: data.get('email') as string,
       password: data.get('password') as string,
     };
-    getToken(loginInfo);
+    if (emitEvent && listenToEvent) {
+      emitEvent('getToken', loginInfo);
+      const token = await listenToEvent('getToken');
+      if (token.error) dispatch(loginError({ error: token.error }));
+      else {
+        dispatch(loginError({ error: null }));
+        dispatch(setToken(token));
+      }
+    }
   };
 
   return (
@@ -47,7 +55,6 @@ export function LoginForm() {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            legend: { textAlign: 'center' },
           }}
         >
           <MyTextField
@@ -57,6 +64,7 @@ export function LoginForm() {
               label: 'Email',
               id: 'email',
               type: 'email',
+              autoComplete: 'email',
             }}
           />
 

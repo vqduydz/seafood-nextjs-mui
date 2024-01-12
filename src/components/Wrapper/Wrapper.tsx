@@ -1,9 +1,10 @@
 'use client';
-import { styled, SxProps } from '@mui/system';
+import { SxMui } from '@/interface/interface';
+import { styled } from '@mui/system';
 
 interface WrapperProps {
   // Mui
-  sx?: SxProps;
+  sx?: SxMui;
   className?: string;
   children?: React.ReactNode;
 }

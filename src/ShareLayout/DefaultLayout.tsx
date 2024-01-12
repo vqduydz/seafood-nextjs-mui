@@ -7,7 +7,7 @@ function DefaultLayout({ children }: { children: ReactNode }) {
   return (
     <Box>
       <Header />
-      <Box sx={{ minHeight: 'calc(100vh - 222px)', pt: '108px' }}>{children}</Box>
+      <Box sx={{ minHeight: 'calc(100vh - 222px)', pt: { xs: '88px', lg: '108px' } }}>{children}</Box>
       <Footer />
     </Box>
   );

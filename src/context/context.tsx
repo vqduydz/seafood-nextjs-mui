@@ -1,4 +1,5 @@
-import { AuthState, loginError, setToken } from '@/lib/redux/features/authSlices';
+import { ISetState } from '@/interface/interface';
+import { AuthState, loginError, logout, setToken } from '@/lib/redux/features/authSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import { getCartItemApi } from '@/utils/services/api/cartItemApi';
 import { jwtDecode } from 'node_modules/jwt-decode/build/cjs';
@@ -6,14 +7,22 @@ import { useSnackbar } from 'notistack';
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 
-interface ICurrentUser {
+export interface IPlace {
+  name?: string;
+  phoneNumber?: string;
+  address?: string;
+  location?: { lat: number; lng: number };
+  primary?: boolean;
+  place_id?: string;
+}
+
+export interface IUser {
   id: number;
   email: string;
   name: string;
   phoneNumber: string;
   gender: string;
-  address: string | null;
-  location: string | null;
+  place?: string | null;
   avatar: string | null;
   role: string;
   birthday: string | null;
@@ -52,12 +61,14 @@ interface IEnqueueSnackbar {
 }
 interface MyContextType {
   socket?: Socket | null;
+  emitEvent?: (eventName: string, data: any) => void;
+  listenToEvent?: (eventName: string) => Promise<any>;
   auth?: AuthState;
-  currentUser?: ICurrentUser | null;
+  currentUser?: IUser | null;
   cartItems?: ICartItem[] | [];
   orderItems?: ICartItem[] | [];
   loading?: { loading: boolean; message?: string };
-  setLoading?: React.Dispatch<React.SetStateAction<{ loading: boolean; message?: string }>> | (() => void);
+  setLoading?: ISetState<{ loading: boolean; message?: string }> | (() => void);
   enqueueSnackbar?: IEnqueueSnackbar;
   handleGetCartItems?: () => void;
 }
@@ -70,23 +81,21 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   const authSelector = useAppSelector((state) => state.auth) as AuthState;
   const orderItemsSelector = useAppSelector((state) => state.orderItems.orderItems) as ICartItem[];
 
-  const [auth, setAuth] = useState<AuthState & { currentUser?: ICurrentUser }>({
+  const [auth, setAuth] = useState<AuthState & { currentUser?: IUser }>({
     currentUserToken: authSelector.currentUserToken,
     isLogin: authSelector.isLogin,
     token: authSelector.token,
   });
-  const [currentUser, setCurrentUser] = useState<ICurrentUser | null>();
+  const [currentUser, setCurrentUser] = useState<IUser | null>();
   const [cartItems, setCartItems] = useState<ICartItem[] | []>([]);
   const [loading, setLoading] = useState<{ loading: boolean; message?: string }>({ loading: false });
   const [orderItems, setOrderItems] = useState<ICartItem[]>([]);
-
+  const [socket, setSocket] = useState<Socket | null>(null);
   const enqueueSnackbar = useSnackbar().enqueueSnackbar as IEnqueueSnackbar;
 
   // auth
   useEffect(() => {
-    const currentUser = authSelector.currentUserToken
-      ? (jwtDecode(authSelector.currentUserToken) as ICurrentUser)
-      : null;
+    const currentUser = authSelector.currentUserToken ? (jwtDecode(authSelector.currentUserToken) as IUser) : null;
     setCurrentUser(currentUser);
     setAuth({
       currentUserToken: authSelector.currentUserToken,
@@ -98,25 +107,38 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
   // socket
 
-  const socket = io(process.env.backendUrl as string, {
-    transports: ['websocket'],
-  });
-
   useEffect(() => {
-    if (socket) {
-      socket.on('sendToken', (token) => {
-        if (token && !token.error) {
-          dispatch(loginError({ error: null }));
-          dispatch(setToken(token));
-        } else {
-          setLoading({ loading: false });
-          if (token.error) dispatch(loginError({ error: token.error }));
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+    const newSocket = io(process.env.backendUrl as string, {
+      transports: ['websocket'],
+    });
+    setSocket(newSocket);
 
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const emitEvent = (eventName: string, data: any) => {
+    if (socket) {
+      socket.emit(eventName, data);
+    }
+  };
+
+  const listenToEvent = (eventName: string): Promise<any> => {
+    return new Promise((resolve) => {
+      if (socket) {
+        socket.on(eventName, (data: any) => {
+          resolve(data);
+        });
+      }
+    });
+  };
+
+  if (socket) {
+    socket.on('logoutUser', (userId) => {
+      if (userId === currentUser?.id) dispatch(logout());
+    });
+  }
   // Cart item
 
   const handleGetCartItems = async () => {
@@ -145,6 +167,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   //
   const sharedState = {
     socket,
+    emitEvent,
+    listenToEvent,
     auth,
     currentUser,
     cartItems,
