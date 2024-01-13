@@ -18,7 +18,7 @@ async function HomePage() {
       <MySlider
         menu
         data={{ items: monDacBiet, imagePath }}
-        headerSlider={{ title: 'Món đặc biết', extendTitle: { title: 'Xem thêm', url: '/menu?=mon-dac-biet' } }}
+        headerSlider={{ title: 'Món đặc biệt', extendTitle: { title: 'Xem thêm', url: '/menu?=mon-dac-biet' } }}
       />
       <MySlider
         menu

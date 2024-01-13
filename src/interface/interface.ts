@@ -1,5 +1,5 @@
 import { SxProps } from '@mui/material';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, FormEvent, SetStateAction } from 'react';
 
 export interface IUser {
   id: number;
@@ -83,4 +83,5 @@ export interface IOrderItems {
 }
 
 export type ISetState<T> = Dispatch<SetStateAction<T>> | (() => void);
+export type ISubmitForm = FormEvent<HTMLFormElement>;
 export type SxMui = SxProps;

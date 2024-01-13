@@ -1,64 +1,88 @@
 import Box from '@mui/material/Box';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import { DropWrapper, MyButton } from '_/components/common';
-import { MyTextField } from '_/components/common/CustomComponents/CustomMui';
-import { useAuth } from '_/context/AuthContext';
-import { useThemMui } from '_/context/ThemeMuiContext';
-import { updateUser } from '_/redux/slices';
-import { capitalize } from '_/utills';
+import Button from '@/components/Button/Button';
+import DropDown from '@/components/Dropdown/Dropdown';
+import MyTextField from '@/components/MyTextField/MyTextField';
+import { useMyContext } from '@/context/context';
+import { ISetState, ISubmitForm, IUser } from '@/interface/interface';
+import { myColors } from '@/styles/color';
+import capitalize from '@/utils/capitalize';
+import { updateUserApi } from '@/utils/services/api/userApi';
+import { Checkbox, FormControlLabel, Typography } from '@mui/material';
 
-export default function EditUser({ edit, setEdit }) {
-  const dispatch = useDispatch();
-  const { currentUser, setSnackbar } = useAuth();
-  const { setLoading } = useThemMui();
+interface IEditUser {
+  edit: { stt: boolean; value?: IUser };
+  setEdit: ISetState<{ stt: boolean; value?: IUser }>;
+  load: boolean;
+  setLoad: ISetState<boolean>;
+}
+
+export default function EditUser({ edit, setEdit, load, setLoad }: IEditUser) {
+  const [editPass, setEditPass] = useState<boolean>(false);
+  const { auth } = useMyContext();
+  const [error, setError] = useState<string | null>(null);
   const { value } = edit;
-  const { id, firstName, lastName, phoneNumber, gender, role } = value;
+  const { id, name, phoneNumber, gender, role, email } = value as IUser;
   const [roleSelect, setRoleSelect] = useState(role);
   const [genderSelect, setGenderSelect] = useState(gender);
   const roleList = ['Root', 'Admin', 'Manage', 'Deliver', 'Customer'];
   const genderList = ['Female', 'Male', 'Other'];
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event: ISubmitForm) => {
     event.preventDefault();
-    setLoading(true);
+    setError(null);
+    setLoad(true);
     const data = new FormData(event.currentTarget);
-    const dataUpdate = {
-      id,
-      firstName: capitalize(data.get('firstName')),
-      lastName: capitalize(data.get('lastName')),
-      phoneNumber: data.get('phoneNumber'),
-      gender: genderSelect,
-      role: roleSelect,
-    };
-
-    dispatch(updateUser(dataUpdate))
-      .then(unwrapResult)
-      .then((result) => {
-        setLoading(false);
-        let message, status;
-        if (result.error) {
-          message = result.error;
-          status = 'error';
-        } else {
-          message = result.message;
-          status = 'success';
-          setEdit({ stt: false, value: {} });
+    const dataUpdate = editPass
+      ? {
+          id,
+          name: capitalize(`${data.get('firstName') as string} ${data.get('lastName') as string}`),
+          password: data.get('password') as string,
+          confirmpassword: data.get('confirmPassword') as string,
+          phoneNumber: data.get('phoneNumber') as string,
+          address: data.get('address') as string,
+          role: roleSelect,
+          gender: genderSelect,
         }
-        setSnackbar({ open: true, message, status });
-      })
-      .catch((e) => {
-        console.log(e);
-        setEdit({ stt: false, value: {} });
-        setSnackbar({ open: true, message: 'unknow error', status: 'error' });
-      });
+      : {
+          id,
+          name: capitalize(`${data.get('firstName') as string} ${data.get('lastName') as string}`),
+          phoneNumber: data.get('phoneNumber') as string,
+          address: data.get('address') as string,
+          role: roleSelect,
+          gender: genderSelect,
+        };
+
+    if (dataUpdate.password != dataUpdate.confirmpassword) {
+      setLoad(false);
+      setError('Xác nhận mật khẩu không trùng khớp !');
+      return;
+    }
+
+    const res = await updateUserApi(dataUpdate, auth?.token as string);
+
+    if (res.data && res.data.error) {
+      setLoad(false);
+      setError(res.data.error);
+      return;
+    }
+    setLoad(false);
+    setEdit({ stt: false });
   };
 
-  const checkCurrentRole = (roles = []) => roles.includes(currentUser.role);
-  const checkRole = (roles = []) => roles.includes(role);
+  // const checkCurrentRole = (roles = []) => roles.includes(currentUser?.role);
+  // const checkRole = (roles = []) => roles.includes(role);
 
+  const textFields = [
+    { name: 'firstName', label: 'Họ', id: 'firstName', defaultValue: `${capitalize(name.split(' ')[0])}` },
+    { name: 'lastName', label: 'Tên', id: 'lastName', type: '', defaultValue: `${capitalize(name.split(' ')[1])}` },
+    { name: 'phoneNumber', label: 'Số điện thoại', id: 'phoneNumber', type: 'number', defaultValue: phoneNumber },
+  ];
+  const passTextFields = [
+    { name: 'password', label: 'Mật khẩu', id: 'password', type: 'password' },
+    { name: 'confirmPassword', label: 'Xác nhận lại mật khẩu', id: 'confirmPassword', type: 'password' },
+  ];
   return (
     <Box>
       <Box
@@ -72,62 +96,134 @@ export default function EditUser({ edit, setEdit }) {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%,-50%)',
-          '& .inner': { display: 'flex', gap: '10px' },
+          '& .inner': {},
         }}
       >
-        <form
-          onSubmit={handleSubmit}
-          style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}
-        >
-          <Box className="inner">
-            <MyTextField
-              required
-              size="small"
-              label="First name"
-              fullWidth
-              name="firstName"
-              type=""
-              autoFocus
-              defaultValue={firstName}
+        <Typography color={'gray'} fontWeight={500} fontSize={'2.4rem'}>
+          Chỉnh sửa
+        </Typography>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            className="inner"
+            sx={{
+              display: 'grid',
+              gap: '10px',
+              gridTemplateColumns: 'repeat( 3, minmax(200px, 1fr))',
+            }}
+          >
+            {textFields.map((item) => {
+              const { id, label, name, type, defaultValue } = item;
+              return (
+                <MyTextField
+                  key={item.id}
+                  center={false}
+                  props={{
+                    size: 'small',
+                    name,
+                    label,
+                    id,
+                    type: type ? type : 'text',
+                    defaultValue: defaultValue ? defaultValue : '',
+                  }}
+                />
+              );
+            })}
+          </Box>
+
+          <Box
+            sx={{
+              display: 'grid',
+              gap: '10px',
+              gridTemplateColumns: 'repeat( 2, minmax(200px, 1fr))',
+              mb: '15px',
+            }}
+          >
+            <DropDown
+              dropList={genderList}
+              result={genderSelect}
+              setResult={setGenderSelect}
+              input={{ inputLabel: 'Gender' }}
             />
-            <MyTextField
-              required
-              defaultValue={lastName}
-              size="small"
-              label="Last name"
-              fullWidth
-              name="lastName"
-              type=""
-            />
-            <MyTextField
-              defaultValue={phoneNumber}
-              size="small"
-              label="Enter Phone Number"
-              fullWidth
-              name="phoneNumber"
-              type="number"
+            <DropDown
+              dropList={roleList}
+              result={roleSelect}
+              setResult={setRoleSelect}
+              input={{ inputLabel: 'Role' }}
             />
           </Box>
-          <Box className="inner">
-            <DropWrapper
-              droplist={genderList}
-              itemSelect={genderSelect}
-              setItemSelect={setGenderSelect}
-              label="Gender"
-            />
-            <DropWrapper droplist={roleList} itemSelect={roleSelect} setItemSelect={setRoleSelect} label="Role" />
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'end', gap: '5px', '& button': { padding: '3px 15px' } }}>
-            <MyButton color={{ bgColor: 'green', mainColor: '#fff' }} type="submit">
-              Update
-            </MyButton>
-            <MyButton
-              onClick={() => setEdit({ stt: false, value: {} })}
-              type="button"
-              color={{ bgColor: '#fe2c55', mainColor: '#fff' }}
+          <FormControlLabel
+            sx={{
+              p: '0!important',
+              m: '0!important',
+              '*': { p: '0!important', display: 'flex', justifyContent: 'center' },
+            }}
+            label="Cập nhật mật khẩu"
+            control={<Checkbox sx={{ m: '0 5px 0 0' }} onChange={(e, checked) => setEditPass(checked)} />}
+          />
+
+          {editPass && (
+            <Box
+              className="inner"
+              sx={{
+                display: 'grid',
+                gap: '10px',
+                gridTemplateColumns: 'repeat( 2, minmax(200px, 1fr))',
+              }}
             >
-              Cancle
-            </MyButton>
+              {passTextFields.map((item) => {
+                const { id, label, name, type } = item;
+                return (
+                  <MyTextField
+                    key={item.id}
+                    center={false}
+                    props={{
+                      size: 'small',
+                      name,
+                      label,
+                      id,
+                      type: type ? type : 'text',
+                    }}
+                  />
+                );
+              })}
+            </Box>
+          )}
+          <Box sx={{ mt: '5px', height: '20px', display: 'flex', alignItems: 'center', position: 'relative' }}>
+            <Box
+              sx={{ height: '1px', backgroundColor: error ? myColors.primary : myColors.secondary, width: '100%' }}
+            />
+            {error && (
+              <Typography
+                sx={{
+                  display: 'block',
+                  position: 'absolute',
+                  width: 'fit-content',
+                  backgroundColor: myColors.white,
+                  color: 'red',
+                  left: 0,
+                  right: 0,
+                  margin: '0 auto',
+                  padding: '2px 10px',
+                }}
+              >
+                {error}
+              </Typography>
+            )}
+          </Box>
+          <Box
+            sx={{
+              mt: '15px',
+              display: 'flex',
+              justifyContent: 'end',
+              gap: '10px',
+            }}
+          >
+            <Button primary type="submit">
+              Xác nhận
+            </Button>
+            <Button outline onClick={() => setEdit({ stt: false })} type="button">
+              Hủy
+            </Button>
           </Box>
         </form>
       </Box>

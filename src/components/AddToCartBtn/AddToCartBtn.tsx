@@ -16,9 +16,9 @@ interface IAddToCartBtn {
 
 export default function AddToCartBtn({ props, menu_id, main, children }: IAddToCartBtn) {
   const { style: originalStyle, ...otherProps } = props || {};
-
   const { currentUser, handleGetCartItems } = useMyContext();
   const { enqueueSnackbar } = useSnackbar();
+
   const handleAddCart = async () => {
     try {
       if (currentUser && currentUser.id) {

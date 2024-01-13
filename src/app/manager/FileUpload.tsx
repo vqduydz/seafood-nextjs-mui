@@ -1,67 +1,84 @@
+import Button from '@/components/Button/Button';
+import { useMyContext } from '@/context/context';
+import { ISetState } from '@/interface/interface';
+import { importUsersApi } from '@/utils/services/api/userApi';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { Box, Typography } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { MyButton } from '_/components/common';
-import { useThemMui } from '_/context/ThemeMuiContext';
-import { importCatalogs, importMenus, importUsers } from '_/redux/slices';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import { ChangeEvent, SyntheticEvent, useState } from 'react';
 
-const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false }) => {
-  console.log(users);
-  const [file, setFile] = useState(null);
-  const { setLoading } = useThemMui();
-  const dispatch = useDispatch();
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+interface IFileUpload {
+  setUpload: ISetState<boolean>;
+  menus?: boolean;
+  catalogs?: boolean;
+  users?: boolean;
+  setLoad: ISetState<boolean>;
+}
+
+const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false, setLoad }: IFileUpload) => {
+  const [file, setFile] = useState<any>();
+  const { auth } = useMyContext();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+    }
   };
-  const handleUpload = (e) => {
-    setLoading(true);
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('file', file);
 
-    if (menus) {
-      dispatch(importMenus(formData))
-        .then(unwrapResult)
-        .then((result) => {
+  const handleUpload = async (e: SyntheticEvent) => {
+    setLoad(true);
+    e.preventDefault();
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      if (users) {
+        try {
+          const response = (await importUsersApi(formData, auth?.token as string)).data;
+          if (response.error) {
+            enqueueSnackbar(response.error as string, { variant: 'error' });
+            setLoad(false);
+            return;
+          }
+          enqueueSnackbar(response.message, { variant: 'success' });
           setUpload(false);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log({ error });
-          setUpload(false);
-          setLoading(false);
-        });
-      return;
-    }
-    if (catalogs) {
-      dispatch(importCatalogs(formData))
-        .then(unwrapResult)
-        .then((result) => {
-          setUpload(false);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log({ error });
-          setUpload(false);
-          setLoading(false);
-        });
-      return;
-    }
-    if (users) {
-      dispatch(importUsers(formData))
-        .then(unwrapResult)
-        .then((result) => {
-          setUpload(false);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log({ error });
-          setUpload(false);
-          setLoading(false);
-        });
-      return;
+          setLoad(false);
+        } catch (error) {
+          console.error(error);
+          setLoad(false);
+        }
+        return;
+      }
+
+      // if (catalogs) {
+      //   dispatch(importCatalogs(formData))
+      //     .then(unwrapResult)
+      //     .then((result) => {
+      //       setUpload(false);
+      //       setLoading(false);
+      //     })
+      //     .catch((error) => {
+      //       console.log({ error });
+      //       setUpload(false);
+      //       setLoading(false);
+      //     });
+      //   return;
+      // }
+      // if (users) {
+      //   dispatch(importUsers(formData))
+      //     .then(unwrapResult)
+      //     .then((result) => {
+      //       setUpload(false);
+      //       setLoading(false);
+      //     })
+      //     .catch((error) => {
+      //       console.log({ error });
+      //       setUpload(false);
+      //       setLoading(false);
+      //     });
+      //   return;
+      // }
     }
   };
 
@@ -98,6 +115,7 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false 
             backgroundColor: '#fff',
             padding: '20px',
             borderRadius: '6px',
+            maxWidth: '300px',
           }}
         >
           <label
@@ -117,11 +135,22 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false 
               hidden
               id="upload-file"
               type="file"
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              // multiple={false}
+              required
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
               onChange={handleFileChange}
             />
             {file ? (
-              <Typography> {file?.name} </Typography>
+              <Typography
+                sx={{
+                  maxWidth: '100%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {file?.name}
+              </Typography>
             ) : (
               <Typography sx={{ display: 'flex', alignItems: 'center' }}>
                 <AttachFileIcon fontSize="medium" sx={{ mr: '5px' }} /> Chọn file
@@ -131,17 +160,22 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false 
           <Box
             sx={{
               display: 'flex',
-              // flexDirection: 'column',
               gap: '10px',
-              justifyContent: 'end',
+              justifyContent: 'center',
             }}
           >
-            <MyButton type="submit" color={{ bgColor: 'green' }}>
-              Import
-            </MyButton>
-            <MyButton type="button" color={{ bgColor: 'red' }} onClick={() => setUpload()}>
+            {file ? (
+              <Button primary type="submit">
+                Import
+              </Button>
+            ) : (
+              <Button primary disable type="submit">
+                Import
+              </Button>
+            )}
+            <Button outline type="button" onClick={() => setUpload(false)}>
               Hủy
-            </MyButton>
+            </Button>
           </Box>
         </Box>
       </form>

@@ -1,38 +1,3 @@
-// import Loading from '@/components/Loading/Loading';
-// import ScrollTopBtn from '@/components/ScrollTopBtn/ScrollTopBtn';
-// import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
-// import ContextProvider from '@/context/Provider';
-// import ReduxProvider from '@/lib/redux/provider';
-// import { Box } from '@mui/material';
-// import SnackbarProvider from '@/components/Snackbar/Snackbar';
-
-// export const metadata = {
-//   title: 'Seafood',
-//   description: 'Seafood',
-// };
-
-// export default function ayout({ children }: { children: React.ReactNode }) {
-//   return (
-//     <html lang="en">
-//       <body>
-//         <Box sx={{ '.notistack-SnackbarContainer': { top: '10px', right: '20px' } }}>
-//           <ThemeRegistry>
-//             <ReduxProvider>
-//               <ContextProvider>
-//                 <SnackbarProvider>
-//                   <Box sx={{ minHeight: 'calc(100vh - 246px)' }}>{children}</Box>
-//                   <Loading />
-//                 </SnackbarProvider>
-//               </ContextProvider>
-//               <ScrollTopBtn />
-//             </ReduxProvider>
-//           </ThemeRegistry>
-//         </Box>
-//       </body>
-//     </html>
-//   );
-// }
-
 'use client';
 import Button from '@/components/Button/Button';
 import ManagerHeader from '@/components/ManagerHeader/ManagerHeader';
@@ -42,7 +7,7 @@ import { useAppSelector } from '@/lib/redux/store';
 import { myColors } from '@/styles/color';
 import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, Suspense, useEffect, useState } from 'react';
 
 const ManagerLayout = ({ children }: { children: ReactNode }) => {
   const isLogin = useAppSelector((state) => state.auth.isLogin) as string;
@@ -134,7 +99,7 @@ const ManagerLayout = ({ children }: { children: ReactNode }) => {
       )}
     </Box>
   ) : (
-    <Box>
+    <Box sx={{ minWidth: '768px' }}>
       <ManagerHeader />
       <Box sx={{ minHeight: 'calc(100vh - 222px)', pt: '70px' }}>
         <Wrapper sx={{ mt: '10px' }}>{children}</Wrapper>

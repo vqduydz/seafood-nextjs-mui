@@ -36,6 +36,7 @@ const Order = () => {
     total_payment,
     items,
     place,
+    note,
   } = order;
   const [list, setList] = useState([]);
   const [feedback, setfeedback] = useState<{ open: boolean; orderItem?: IOrderItems }>({ open: false });
@@ -62,10 +63,12 @@ const Order = () => {
           history,
           place,
           createdAt,
+          note,
         } = res;
 
         setList(JSON.parse(history));
         setOrder({
+          note,
           deliver,
           handler,
           payment_methods,
@@ -159,7 +162,7 @@ const Order = () => {
                 Trạng thái đơn hàng : <i>{status}</i>{' '}
               </Typography>
             </Box>
-            <Typography sx={{ mt: 2, pt: 2, borderTop: '1px solid #0000000a', fontWeight: 700 }}>
+            <Typography sx={{ mt: 0.5, pt: 0.5, borderTop: '1px solid #0000000a', fontWeight: 700 }}>
               <u> Người nhận</u>
             </Typography>
             <Box
@@ -181,6 +184,11 @@ const Order = () => {
                 <Typography> {place?.phoneNumber}</Typography>
               </Box>
               <Typography>Địa chỉ :{` ${place?.address}`}</Typography>
+              {note && (
+                <Typography fontStyle={'italic'} sx={{ textDecoration: 'underline', color: myColors.primary }}>
+                  Ghi chú :{` ${note}`}
+                </Typography>
+              )}
             </Box>
           </Box>
           <Box>

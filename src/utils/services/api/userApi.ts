@@ -7,6 +7,7 @@ interface IRegisterInfo {
   password?: string;
   confirmPassword?: string;
   gender?: string;
+  role?: string;
 }
 interface IParam {
   email: string;
@@ -46,13 +47,14 @@ export const resetPasswordApi = (token: string, password: string) => {
   return axiosService.patch(url, { password });
 };
 
-// export const updateUserApi = (dataUpdate: IRegisterInfo & { id: number | string }) => {
-//   const url = `/user`;
-//   return axiosService.patch(url, dataUpdate);
-// };
-
 export const updateUserApi = (dataUpdate: IRegisterInfo & { id: number | string }, token?: string) => {
   const url = `/user`;
   const headers = setHeader(token);
   return axiosService.patch(url, dataUpdate, { headers });
+};
+
+export const importUsersApi = (formData: any, token: string) => {
+  const url = `/user/import`;
+  const headers = setHeader(token, true);
+  return axiosService.post(url, formData, { headers });
 };

@@ -126,41 +126,34 @@ export default function Row({ user, STT, setEdit }: IRow) {
                         justifyContent={'center'}
                         sx={{
                           display: 'flex',
-                          '& .btn ': {
-                            '+ .btn': {
-                              marginLeft: '5px',
-                            },
-                          },
                           '& .icon': {
                             fontSize: '1.8rem !important',
                           },
-                          ' * ': {
-                            borderRadius: '3px',
-                          },
+                          gap: '5px',
                         }}
                       >
                         {(role === 'Root' && currentUser?.id !== id) ||
                         (role === 'Admin' && currentUser?.id !== id && currentUser?.role === 'Admin') ? (
-                          <Button aria-label="delete" className={' btn edit-btn disable'}>
+                          <Button primary style={{ borderRadius: '3px', padding: '5px', backgroundColor: 'orange' }}>
                             <EditIcon className="icon" />
                           </Button>
                         ) : (
                           <Button
+                            primary
+                            style={{ borderRadius: '3px', padding: '5px', backgroundColor: 'orange' }}
                             onClick={() => {
                               setEdit({ stt: true, value: user });
                             }}
-                            aria-label="delete"
-                            className={' btn edit-btn'}
                           >
                             <EditIcon className="icon" />
                           </Button>
                         )}
                         {role === 'Root' || (role === 'Admin' && currentUser?.role !== 'Root') ? (
-                          <Button className={' btn del-btn disable'} aria-label="delete">
+                          <Button primary style={{ borderRadius: '3px', padding: '5px' }} disable>
                             <DeleteIcon className="icon" />
                           </Button>
                         ) : (
-                          <Button onClick={handleDelete} className={' btn del-btn'} aria-label="delete">
+                          <Button primary style={{ borderRadius: '3px', padding: '5px' }} onClick={handleDelete}>
                             <DeleteIcon className="icon" />
                           </Button>
                         )}

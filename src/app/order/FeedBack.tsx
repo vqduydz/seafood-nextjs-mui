@@ -1,6 +1,6 @@
 import Button from '@/components/Button/Button';
 import { useMyContext } from '@/context/context';
-import { IOrderItems } from '@/interface/interface';
+import { IOrderItems, ISubmitForm } from '@/interface/interface';
 import { myColors } from '@/styles/color';
 import { createNewFeedbackApi } from '@/utils/services/api/feedbackapi';
 import { Box, Rating, TextareaAutosize, Typography } from '@mui/material';
@@ -19,7 +19,7 @@ const Feedback = ({ feedback, setfeedback, order_code }: IFeedback) => {
   const { catalog, catalog_slug, menu_id, cartItemId, name, image, slug } = orderItem;
   const [value, setValue] = useState<number>(5);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: ISubmitForm) => {
     try {
       e.preventDefault();
       const data = new FormData(e.currentTarget);

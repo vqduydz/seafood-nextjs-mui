@@ -1,9 +1,7 @@
 'use client';
 
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 // import { Button, PaginationCustom, SearchBox } from '_/components/common';
 // import { useThemMui } from '_/context/ThemeMuiContext';
 // import useDebounce from '_/hook/useDebounce';
@@ -11,34 +9,35 @@ import { useDispatch } from 'react-redux';
 // import { gmailFiller } from '_/utills';
 // import FileUpload from '../FileUpload';
 // import CreateNewUser from './CreateNewUser';
-import Edit from './EditUser';
-import Row from './Row';
-import useDebounce from '@/hook/useDebounce';
-import gmailFiller from '@/utils/gmailFiller';
 import Button from '@/components/Button/Button';
 import PaginationCustom from '@/components/PaginationCustom/PaginationCustom';
-import CreateNewUser from './CreateNewUser';
-import FileUpload from '../FileUpload';
 import SearchBox from '@/components/SearchBox/SearchBox';
-import { getUserApi } from '@/utils/services/api/userApi';
 import { useMyContext } from '@/context/context';
-import { ISetState, IUser } from '@/interface/interface';
+import useDebounce from '@/hook/useDebounce';
+import { IUser } from '@/interface/interface';
+import gmailFiller from '@/utils/gmailFiller';
+import { getUserApi } from '@/utils/services/api/userApi';
+import Row from './Row';
+import CreateNewUser from './CreateNewUser';
+import EditUser from './EditUser';
+import Loading from '@/components/Loading/Loading';
+import FileUpload from '../FileUpload';
 
 export default function UserManage() {
   const [edit, setEdit] = useState<{ stt: boolean; value?: IUser }>({ stt: false });
-  const [addUser, setAddUser] = useState(false);
+  const [addUser, setAddUser] = useState<boolean>(false);
   const [overLay, setOverLay] = useState(false);
-  const { auth } = useMyContext();
-  const [upload, setUpload] = useState(false);
+  const { auth, loading } = useMyContext();
+  const [upload, setUpload] = useState<boolean>(false);
   const [tab, setTab] = useState({ index: 0, role: '', content: '' });
   const { index, role, content } = tab;
   const [searchValue, setSearchValue] = useState('');
   const debounce = useDebounce(searchValue, 500);
-  const [load, setLoad] = useState(false);
   const [page, setPage] = useState(1);
   const [limit_per_page, setlimit_per_page] = useState(20);
   const [allUser, setAllUser] = useState({ items: [], totalPages: 1, limitPerPage: limit_per_page });
   const { items, totalPages, limitPerPage } = allUser;
+  const [load, setLoad] = useState<boolean>(false);
 
   useEffect(() => {
     if (!addUser && !edit.stt) {
@@ -55,6 +54,7 @@ export default function UserManage() {
     if (debounce.trim()) {
       setLoad(true);
     }
+
     (async () => {
       const getUser = (await getUserApi(query, auth?.token as string)).data;
       if (getUser) setLoad(false);
@@ -65,9 +65,10 @@ export default function UserManage() {
       });
     })();
 
+    console.log(load);
     window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounce, page, limit_per_page, content]);
+  }, [debounce, page, limit_per_page, content, load]);
 
   useEffect(() => {
     setPage(1);
@@ -183,7 +184,6 @@ export default function UserManage() {
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
           gap: '10px',
           position: 'sticky',
           top: '56px',
@@ -241,7 +241,7 @@ export default function UserManage() {
         setPage={setPage}
       />
 
-      {/* {(overLay || edit.stt || addUser || upload) && (
+      {(overLay || edit.stt || addUser || upload) && (
         <Box sx={{ zIndex: 3, backgroundColor: '#212121', position: 'relative' }}>
           {overLay && (
             <Box
@@ -257,11 +257,12 @@ export default function UserManage() {
               }}
             />
           )}
-          {edit.stt && <Edit setEdit={setEdit} edit={edit} />}
-          {addUser && <CreateNewUser setAddUser={setAddUser} />}
-          {upload && <FileUpload setUpload={setUpload} users />}
+          {edit.stt && <EditUser load={load} setLoad={setLoad} setEdit={setEdit} edit={edit} />}
+          {addUser && <CreateNewUser load={load} setLoad={setLoad} setAddUser={setAddUser} />}
+          {upload && <FileUpload setLoad={setLoad} setUpload={setUpload} users />}
         </Box>
-      )} */}
+      )}
+      {load && <Loading />}
     </Box>
   );
 }

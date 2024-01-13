@@ -1,12 +1,13 @@
 import Button from '@/components/Button/Button';
 import { IPlace } from '@/context/context';
+import { ISubmitForm } from '@/interface/interface';
 import { myColors } from '@/styles/color';
 import renderPrice from '@/utils/renderPrice';
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { FormEvent } from 'react';
 
 interface IPay {
-  handlePay: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  handlePay: (e: ISubmitForm) => Promise<void>;
   total: number;
   shipFee: number;
   handleCancle: () => void;

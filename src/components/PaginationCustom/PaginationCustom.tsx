@@ -52,10 +52,8 @@ const PaginationCustom = ({ limit_per_page, page, setPage, setlimit_per_page, to
           count={total_page}
           page={page}
           boundaryCount={2}
-          onChange={(event: ChangeEvent<unknown>, page: number) => {
-            console.log({ page });
-
-            // setPage(page as number);
+          onChange={(_, page: number) => {
+            setPage(page as number);
           }}
         />
       </Box>

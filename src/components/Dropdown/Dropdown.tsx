@@ -119,7 +119,7 @@ function DropDown({
                 showList();
               },
               size: 'small',
-              value: searchValue,
+              value: searchValue || result,
               label: inputLabel,
               type: 'text',
               placeholder: placeholder,

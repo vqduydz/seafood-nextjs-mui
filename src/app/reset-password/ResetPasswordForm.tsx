@@ -3,6 +3,7 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { useMyContext } from '@/context/context';
+import { ISubmitForm } from '@/interface/interface';
 import { myColors } from '@/styles/color';
 import { resetPasswordApi } from '@/utils/services/api/userApi';
 import { Box, Typography } from '@mui/material';
@@ -17,7 +18,7 @@ export function ResetPasswordForm() {
   const token = searchParams.get('token') as string;
 
   const { setLoading } = useMyContext();
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: ISubmitForm) => {
     if (setLoading) setLoading({ loading: true });
     try {
       e.preventDefault();

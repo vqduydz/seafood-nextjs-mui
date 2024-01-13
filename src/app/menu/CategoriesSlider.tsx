@@ -16,7 +16,7 @@ const CategoriesSlider = ({ newcatalogsWithMenus }: { newcatalogsWithMenus: any[
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const slug = `${searchParams}`.split('&')[0].replace(/\=/g, '');
+    const slug = `${searchParams}`.split('+')[0].replace(/\=/g, '');
     const section = document.getElementById(slug);
     if (section) {
       const windowWidth = window.innerWidth;
@@ -77,7 +77,7 @@ const CategoriesSlider = ({ newcatalogsWithMenus }: { newcatalogsWithMenus: any[
             const { name, slug } = item;
             return (
               <SwiperSlide key={index} className={'slider-btn'}>
-                <Button text scale href={`?=${slug}&iat=${Date.now()}`} style={{ padding: '8px 24px' }}>
+                <Button text scale href={`?=${slug}+${Date.now()}`} style={{ padding: '8px 24px' }}>
                   {name}
                 </Button>
               </SwiperSlide>

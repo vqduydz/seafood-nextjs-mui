@@ -3,6 +3,7 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { useMyContext } from '@/context/context';
+import { ISubmitForm } from '@/interface/interface';
 import { login, loginError, setToken } from '@/lib/redux/features/authSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import { myColors } from '@/styles/color';
@@ -32,7 +33,7 @@ export function RegisterForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLogin, token]);
 
-  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: ISubmitForm) => {
     if (setLoading) setLoading({ loading: true });
     try {
       e.preventDefault();
@@ -40,7 +41,7 @@ export function RegisterForm() {
       const data = new FormData(e.currentTarget);
       const registerInfo = {
         name: capitalize(((data.get('firstName') as string) + ' ' + data.get('lastName')) as string),
-        email: data.get('email') as string,
+        email: (data.get('email') as string).toLowerCase(),
         phoneNumber: data.get('phoneNumber') as string,
         password: data.get('password') as string,
         confirmPassword: data.get('confirmPassword') as string,
@@ -76,7 +77,7 @@ export function RegisterForm() {
   const textFields = [
     { name: 'firstName', label: 'Họ', id: 'firstName' },
     { name: 'lastName', label: 'Tên', id: 'lastName', type: '' },
-    { name: 'email', label: 'Email', id: 'email', type: 'email' },
+    { name: 'email', label: 'Email', id: 'email', type: 'email', autoComplete: 'email' },
     { name: 'phoneNumber', label: 'Số điện thoại', id: 'phoneNumber', type: 'number' },
     { name: 'password', label: 'Mật khẩu', id: 'password', type: 'password' },
     { name: 'confirmPassword', label: 'Xác nhận lại mật khẩu', id: 'confirmPassword', type: 'password' },
@@ -92,7 +93,7 @@ export function RegisterForm() {
           }}
         >
           {textFields.map((item) => {
-            const { id, label, name, type } = item;
+            const { id, label, name, type, autoComplete } = item;
             return (
               <MyTextField
                 key={item.id}
@@ -102,6 +103,7 @@ export function RegisterForm() {
                   name,
                   label,
                   id,
+                  autoComplete: autoComplete ? autoComplete : 'off',
                   type: type ? type : 'text',
                 }}
               />

@@ -11,6 +11,7 @@ import DropDown from '@/components/Dropdown/Dropdown';
 import { login } from '@/lib/redux/features/authSlices';
 import { useAppDispatch } from '@/lib/redux/store';
 import { updateUserApi } from '@/utils/services/api/userApi';
+import { ISubmitForm } from '@/interface/interface';
 
 const AddFirstPlace = () => {
   const dispatch = useAppDispatch();
@@ -49,7 +50,7 @@ const AddFirstPlace = () => {
       setLocation({ lat, lng });
     }
   };
-  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+  const handleUpdate = async (e: ISubmitForm) => {
     e.preventDefault();
 
     try {

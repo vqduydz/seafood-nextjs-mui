@@ -17,6 +17,7 @@ import Pay from './Pay';
 import ShowAllPlace from './ShowAllPlace';
 import { createNewOrderApi } from '@/utils/services/api/orderApi';
 import { deleteCartItemApi } from '@/utils/services/api/cartItemApi';
+import { ISubmitForm } from '@/interface/interface';
 
 export interface IUpdateModel {
   orderer: boolean;
@@ -59,7 +60,7 @@ const Checkout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderItems]);
 
-  const handlePay = async (e: FormEvent<HTMLFormElement>) => {
+  const handlePay = async (e: ISubmitForm) => {
     try {
       const data = new FormData(e.currentTarget);
       e.preventDefault();

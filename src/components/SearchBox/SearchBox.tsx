@@ -1,12 +1,12 @@
+import { ISetState, SxMui } from '@/interface/interface';
+import { myColors } from '@/styles/color';
 import ClearIcon from '@mui/icons-material/Clear';
 import RotateRightIcon from '@mui/icons-material/RotateRight';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, IconButton, InputBase } from '@mui/material';
-
-import './SearchBox.css';
-import { ISetState, SxMui } from '@/interface/interface';
-import Button from '../Button/Button';
 import { ChangeEvent } from 'react';
+import Button from '../Button/Button';
+import './SearchBox.css';
 
 interface ISearchBox {
   searchValue: string;
@@ -57,19 +57,21 @@ function SearchBox({
             display: 'flex',
             gap: '10px',
             justifyContent: 'start',
-            border: '1px solid #f7d800',
+            border: `1px solid ${myColors.primary}`,
             width: '100%',
+            maxWidth: '768px',
             ...sx,
           }}
         >
           <Box
             sx={{
-              background: '#f7d800',
+              background: myColors.primary,
               color: '#fff',
               outline: 'none',
               padding: '2px 40px',
               position: 'relative',
               width: '100%',
+              display: 'flex',
             }}
           >
             <Box
@@ -98,7 +100,6 @@ function SearchBox({
               }}
               placeholder={placeholder}
             />
-
             <Box
               sx={{
                 width: '40px',
@@ -114,12 +115,12 @@ function SearchBox({
             >
               {!!searchValue && !loading && (
                 <IconButton onClick={handleClear} type="button">
-                  <ClearIcon fontSize="medium" />
+                  <ClearIcon sx={{ color: myColors.white }} fontSize="medium" />
                 </IconButton>
               )}
               {!!searchValue && loading && (
                 <IconButton onClick={handleClear} type="button">
-                  <RotateRightIcon className="loading" fontSize="medium" />
+                  <RotateRightIcon sx={{ color: myColors.white }} className="loading" fontSize="medium" />
                 </IconButton>
               )}
             </Box>
@@ -138,12 +139,12 @@ function SearchBox({
         }}
       >
         {create && (
-          <Button onClick={() => handleCreate(true)} className="btn" style={{ width: '80px' }}>
+          <Button primary onClick={() => handleCreate(true)} className="btn">
             Tạo mới
           </Button>
         )}
         {_import && (
-          <Button onClick={() => handleImport(true)} className="btn">
+          <Button outline onClick={() => handleImport(true)} className="btn">
             Import
           </Button>
         )}

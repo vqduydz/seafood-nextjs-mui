@@ -3,6 +3,7 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { useMyContext } from '@/context/context';
+import { ISubmitForm } from '@/interface/interface';
 import { myColors } from '@/styles/color';
 import { forgotPasswordApi } from '@/utils/services/api/userApi';
 import { Box, Typography } from '@mui/material';
@@ -22,7 +23,7 @@ export function ForgotPasswordForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLogin]);
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: ISubmitForm) => {
     if (setLoading) setLoading({ loading: true });
     try {
       e.preventDefault();

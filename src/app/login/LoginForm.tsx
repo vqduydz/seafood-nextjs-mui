@@ -3,6 +3,7 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { useMyContext } from '@/context/context';
+import { ISubmitForm } from '@/interface/interface';
 import { login, loginError, setToken } from '@/lib/redux/features/authSlices';
 import { useAppDispatch } from '@/lib/redux/store';
 import { myColors } from '@/styles/color';
@@ -29,7 +30,7 @@ export function LoginForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLogin, token]);
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: ISubmitForm) => {
     e.preventDefault();
     dispatch(loginError({ error: null }));
     const data = new FormData(e.currentTarget);

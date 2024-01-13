@@ -1,68 +1,69 @@
+import Button from '@/components/Button/Button';
+import DropDown from '@/components/Dropdown/Dropdown';
+import MyTextField from '@/components/MyTextField/MyTextField';
+import { useMyContext } from '@/context/context';
+import { ISetState, ISubmitForm } from '@/interface/interface';
+import { myColors } from '@/styles/color';
+import capitalize from '@/utils/capitalize';
+import removeVietnameseTones from '@/utils/removeVietnameseTones';
+import { createNewUserApi } from '@/utils/services/api/userApi';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import { DropWrapper, MyButton } from '_/components/common';
-import { MyTextField } from '_/components/common/CustomComponents/CustomMui';
-import { useAuth } from '_/context/AuthContext';
-import { useThemMui } from '_/context/ThemeMuiContext';
-import { createNewUser } from '_/redux/slices';
-import { capitalize } from '_/utills';
-
-export default function CreateNewUser({ setAddUser }) {
-  const dispatch = useDispatch();
-  const { setLoading } = useThemMui();
-  const { setSnackbar } = useAuth();
-  const [notif, setNotif] = useState();
+export default function CreateNewUser({
+  load,
+  setLoad,
+  setAddUser,
+}: {
+  setAddUser: ISetState<boolean>;
+  load: boolean;
+  setLoad: ISetState<boolean>;
+}) {
+  const [error, setError] = useState<string | null>(null);
   const [roleSelect, setRoleSelect] = useState('Customer');
   const [genderSelect, setGenderSelect] = useState('Female');
   const roleList = ['Root', 'Admin', 'Manage', 'Deliver', 'Customer'];
   const genderList = ['Female', 'Male', 'Other'];
+  const { enqueueSnackbar } = useMyContext();
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
 
-  const handleSubmit = async (event) => {
-    setNotif();
+  const handleSubmit = async (event: ISubmitForm) => {
     event.preventDefault();
-    setLoading(true);
+    setError(null);
+    setLoad(true);
     const data = new FormData(event.currentTarget);
     const dataUser = {
-      firstName: capitalize(data.get('firstName')),
-      lastName: capitalize(data.get('lastName')),
-      email: data.get('email'),
-      password: data.get('password'),
-      confirmpassword: data.get('confirmpassword'),
-      phoneNumber: data.get('phoneNumber'),
-      address: data.get('address'),
+      name: capitalize(`${data.get('firstName') as string} ${data.get('lastName') as string}`),
+      email: (data.get('email') as string).toLowerCase(),
+      password: data.get('password') as string,
+      confirmpassword: data.get('confirmPassword') as string,
+      phoneNumber: data.get('phoneNumber') as string,
+      address: data.get('address') as string,
       role: roleSelect,
       gender: genderSelect,
     };
-
-    if (dataUser.password !== dataUser.confirmpassword) {
-      setLoading(false);
-      setNotif('Password & confirm password not match');
+    if (dataUser.password != dataUser.confirmpassword) {
+      setLoad(false);
+      setError('Xác nhận mật khẩu không trùng khớp !');
       return;
-    } else
-      dispatch(createNewUser(dataUser))
-        .then(unwrapResult)
-        .then((result) => {
-          setLoading(false);
-          let message, status;
-          if (result.error) {
-            message = result.error;
-            status = 'error';
-          } else {
-            message = result.message;
-            status = 'success';
-            setAddUser();
-          }
-          setSnackbar({ open: true, message, status });
-        })
-        .catch((e) => {
-          setLoading(false);
-          setNotif(e.errorMessage);
-        });
+    }
+    const respone = await createNewUserApi(dataUser);
+    if (respone.data.error) return setError(respone.data.error);
+    if (enqueueSnackbar) enqueueSnackbar(respone.data, { variant: 'success' });
+    setLoad(false);
+    setAddUser(false);
   };
+
+  const textFields = [
+    { name: 'firstName', label: 'Họ', id: 'firstName', value: firstName, onChange: setFirstName },
+    { name: 'lastName', label: 'Tên', id: 'lastName', value: lastName, onChange: setLastName },
+    { name: 'email', label: 'Email', id: 'email', type: 'email', autoComplete: 'email' },
+    { name: 'phoneNumber', label: 'Số điện thoại', id: 'phoneNumber', type: 'number' },
+    { name: 'password', label: 'Mật khẩu', id: 'password', type: 'password' },
+    { name: 'confirmPassword', label: 'Xác nhận lại mật khẩu', id: 'confirmPassword', type: 'password' },
+  ];
 
   return (
     <Box>
@@ -77,121 +78,116 @@ export default function CreateNewUser({ setAddUser }) {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%,-50%)',
-          '& .inner': { display: 'flex', gap: '10px' },
+          '& .inner': { m: 0 },
         }}
       >
-        <Typography fontWeight={500} fontSize={'2.4rem'}>
-          Create New User
+        <Typography color={'gray'} fontWeight={500} fontSize={'2.4rem'}>
+          Tạo mới
         </Typography>
-        <form
-          onSubmit={handleSubmit}
-          style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}
-        >
-          <Box className="inner">
-            <MyTextField
-              size="small"
-              label="First name"
-              required
-              fullWidth
-              id="firstName"
-              name="firstName"
-              autoComplete="off"
-              type=""
-              autoFocus
-            />
-            <MyTextField
-              size="small"
-              label="Last name"
-              required
-              fullWidth
-              id="lastName"
-              name="lastName"
-              autoComplete="off"
-              type=""
-            />
+        <form onSubmit={handleSubmit} style={{ marginTop: '15px', display: 'flex', flexDirection: 'column' }}>
+          <Box
+            className="inner"
+            sx={{
+              display: 'grid',
+              gap: '10px',
+              gridTemplateColumns: 'repeat( 2, minmax(200px, 1fr))',
+            }}
+          >
+            {textFields.map((item) => {
+              const { id, label, name, type, autoComplete, onChange, value } = item;
+
+              return name === 'firstName' || name === 'lastName' ? (
+                <MyTextField
+                  key={item.id}
+                  center={false}
+                  props={{
+                    size: 'small',
+                    name,
+                    label,
+                    id,
+                    autoComplete: autoComplete ? autoComplete : 'off',
+                    type: type ? type : 'text',
+                    value: value ? value : '',
+                    onChange: onChange
+                      ? (e) => {
+                          const value = (e.target.value as string).replace(/ /g, '');
+                          onChange(value);
+                        }
+                      : undefined,
+                  }}
+                />
+              ) : (
+                <MyTextField
+                  key={item.id}
+                  center={false}
+                  props={{
+                    size: 'small',
+                    name,
+                    label,
+                    id,
+                    autoComplete: autoComplete ? autoComplete : 'off',
+                    type: type ? type : 'text',
+                  }}
+                />
+              );
+            })}
           </Box>
-          <Box className="inner">
-            <MyTextField
-              size="small"
-              label="Enter Email"
-              required
-              fullWidth
-              id="email"
-              name="email"
-              autoComplete="off"
-              type="email"
+          <Box sx={{ mt: '15px', height: '20px', display: 'flex', alignItems: 'center', position: 'relative' }}>
+            <Box
+              sx={{ height: '1px', backgroundColor: error ? myColors.primary : myColors.secondary, width: '100%' }}
             />
-            <MyTextField
-              size="small"
-              label="Enter Phone Number"
-              fullWidth
-              name="phoneNumber"
-              type="number"
-              id="phoneNumber"
-              autoComplete="off"
-            />
-          </Box>
-          <Box className="inner">
-            <MyTextField
-              size="small"
-              label="Enter Password"
-              required
-              fullWidth
-              name="password"
-              type="password"
-              id="password"
-              autoComplete="off"
-            />
-            <MyTextField
-              size="small"
-              label="Confirm Password"
-              required
-              fullWidth
-              name="confirmpassword"
-              type="password"
-              id="confirmpassword"
-              autoComplete="off"
-            />
-          </Box>
-          {notif ? (
-            <Typography lineHeight={'10px'} sx={{ color: 'red', height: '10px', fontSize: '1.4rem' }}>
-              {notif}
-            </Typography>
-          ) : (
-            <Typography
-              sx={{
-                color: 'red',
-                height: '10px',
-                fontSize: '1.4rem',
-                position: 'relative',
-                '::after': {
+            {error && (
+              <Typography
+                sx={{
                   display: 'block',
                   position: 'absolute',
-                  top: '50%',
-                  content: `''`,
-                  height: '1px',
-                  width: '100%',
-                  backgroundColor: '#0000003b',
-                },
-              }}
+                  width: 'fit-content',
+                  backgroundColor: myColors.white,
+                  color: 'red',
+                  left: 0,
+                  right: 0,
+                  margin: '0 auto',
+                  padding: '2px 10px',
+                }}
+              >
+                {error}
+              </Typography>
+            )}
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gap: '10px',
+              gridTemplateColumns: 'repeat( 2, minmax(200px, 1fr))',
+            }}
+          >
+            <DropDown
+              dropList={genderList}
+              result={genderSelect}
+              setResult={setGenderSelect}
+              input={{ inputLabel: 'Gender' }}
             />
-          )}
-          <Box className="inner" sx={{ justifyContent: 'space-between' }}>
-            <DropWrapper
-              droplist={genderList}
-              itemSelect={genderSelect}
-              setItemSelect={setGenderSelect}
-              label="Gender"
+            <DropDown
+              dropList={roleList}
+              result={roleSelect}
+              setResult={setRoleSelect}
+              input={{ inputLabel: 'Role' }}
             />
-            <DropWrapper droplist={roleList} itemSelect={roleSelect} setItemSelect={setRoleSelect} label="Role" />
-            <Box sx={{ display: 'flex', justifyContent: 'end', gap: '5px', '& button': { padding: '3px 15px' } }}>
-              <MyButton color={{ bgColor: 'green', mainColor: '#fff' }} type="submit">
-                Create
-              </MyButton>
-              <MyButton onClick={() => setAddUser()} type="button" color={{ bgColor: '#fe2c55', mainColor: '#fff' }}>
-                Cancle
-              </MyButton>
-            </Box>
+          </Box>
+          <Box
+            sx={{
+              mt: '15px',
+              display: 'flex',
+              justifyContent: 'end',
+              gap: '10px',
+            }}
+          >
+            <Button primary type="submit">
+              Xác nhận
+            </Button>
+            <Button outline onClick={() => setAddUser(false)} type="button">
+              Hủy
+            </Button>
           </Box>
         </form>
       </Box>

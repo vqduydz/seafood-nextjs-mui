@@ -11,6 +11,7 @@ import { updateUserApi } from '@/utils/services/api/userApi';
 import { login } from '@/lib/redux/features/authSlices';
 import { useAppDispatch } from '@/lib/redux/store';
 import capitalize from '@/utils/capitalize';
+import { ISubmitForm } from '@/interface/interface';
 
 const AddPlace = ({
   setAdd,
@@ -38,7 +39,7 @@ const AddPlace = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, location]);
 
-  const handleAddPlace = async (e: FormEvent<HTMLFormElement>) => {
+  const handleAddPlace = async (e: ISubmitForm) => {
     e.preventDefault();
     try {
       const data = new FormData(e.currentTarget);
