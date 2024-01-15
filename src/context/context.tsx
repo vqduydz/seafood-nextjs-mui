@@ -1,4 +1,4 @@
-import { ISetState } from '@/interface/interface';
+import { IMenu, ISetState } from '@/interface/interface';
 import { AuthState, logout } from '@/lib/redux/features/authSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import { getCartItemApi } from '@/utils/services/api/cartItemApi';
@@ -28,20 +28,6 @@ export interface IUser {
   createdAt: string;
   iat: string;
 }
-export interface ICartItem {
-  id: number;
-  customer_id: number;
-  menu_id: number;
-  quantity: number;
-  name: string;
-  slug: string;
-  catalog: string;
-  catalogSlug: string;
-  price: number;
-  unit: string;
-  max_order: number | null;
-  image: string;
-}
 
 interface MyContextType {
   socket?: Socket | null;
@@ -49,8 +35,8 @@ interface MyContextType {
   listenToEvent?: (eventName: string) => Promise<any>;
   auth?: AuthState;
   currentUser?: IUser | null;
-  cartItems?: ICartItem[] | [];
-  orderItems?: ICartItem[] | [];
+  cartItems?: IMenu[] | [];
+  orderItems?: IMenu[] | [];
   loading?: { loading: boolean; message?: string };
   setLoading?: ISetState<{ loading: boolean; message?: string }> | (() => void);
   handleGetCartItems?: () => void;
@@ -62,16 +48,16 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   //
   const dispatch = useAppDispatch();
   const authSelector = useAppSelector((state) => state.auth) as AuthState;
-  const orderItemsSelector = useAppSelector((state) => state.orderItems.orderItems) as ICartItem[];
+  const orderItemsSelector = useAppSelector((state) => state.orderItems.orderItems) as IMenu[];
   const [auth, setAuth] = useState<AuthState & { currentUser?: IUser }>({
     currentUserToken: authSelector.currentUserToken,
     isLogin: authSelector.isLogin,
     token: authSelector.token,
   });
   const [currentUser, setCurrentUser] = useState<IUser | null>();
-  const [cartItems, setCartItems] = useState<ICartItem[] | []>([]);
+  const [cartItems, setCartItems] = useState<IMenu[] | []>([]);
   const [loading, setLoading] = useState<{ loading: boolean; message?: string }>({ loading: false });
-  const [orderItems, setOrderItems] = useState<ICartItem[]>([]);
+  const [orderItems, setOrderItems] = useState<IMenu[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
 
   // auth

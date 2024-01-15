@@ -100,7 +100,7 @@ export default function EditUser({ edit, setEdit, load, setLoad }: IEditUser) {
         }}
       >
         <Typography color={'gray'} fontWeight={500} fontSize={'2.4rem'}>
-          Chỉnh sửa
+          {`Chỉnh sửa "${value?.email}"`}
         </Typography>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
           <Box

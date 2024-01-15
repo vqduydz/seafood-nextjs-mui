@@ -1,22 +1,20 @@
 'use client';
-import { Box, Typography } from '@mui/material';
-// import AppOrderTimeline from './AppOrderTimeline';
-// import CustomizedTables from './CustomizedTables';
-import Feedback from './FeedBack';
-import { ICartItem, IUser, IPlace, useMyContext } from '@/context/context';
+import loginOnly from '@/ShareLayout/loginOnly';
+import Button from '@/components/Button/Button';
+import { useMyContext } from '@/context/context';
+import { IOrder, IOrderItems } from '@/interface/interface';
 import { useAppDispatch } from '@/lib/redux/store';
+import { myColors } from '@/styles/color';
+import renderPrice from '@/utils/renderPrice';
+import { getFeedbackApi } from '@/utils/services/api/feedbackapi';
+import { getOrderByOrderCodeApi } from '@/utils/services/api/orderApi';
+import { Box, Typography } from '@mui/material';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
-import renderPrice from '@/utils/renderPrice';
-import Button from '@/components/Button/Button';
-import loginOnly from '@/ShareLayout/loginOnly';
-import { getOrderByOrderCodeApi } from '@/utils/services/api/orderApi';
-import { IOrder, IOrderItems } from '@/interface/interface';
-import { getFeedbackApi } from '@/utils/services/api/feedbackapi';
-import Image from 'next/image';
 import AppOrderTimeline from './AppOrderTimeline';
 import CustomizedTables from './CustomizedTables';
-import { myColors } from '@/styles/color';
+import Feedback from './FeedBack';
 
 const Order = () => {
   const { auth } = useMyContext();
@@ -95,8 +93,8 @@ const Order = () => {
     (async () => {
       const promises = items.map(async (item) => {
         try {
-          const getfeedback = (await getFeedbackApi({ feedback_code: `${order_code}${item.cartItemId}` })).data;
-          return { ...item, feedbacked: getfeedback.feedbacked };
+          const getfeedback = await getFeedbackApi({ feedback_code: `${order_code}${item.cartItemId}` });
+          return { ...item, feedbacked: getfeedback.data.feedbacked };
         } catch (error) {
           console.log(error);
           return item;

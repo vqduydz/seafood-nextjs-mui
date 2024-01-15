@@ -1,16 +1,4 @@
-import { axiosService } from './axiosClient';
-
-// export const catalogApi = (slug) => {
-//   if (!slug) {
-//     const url = `/catalog`;
-//     return axiosService.get(url);
-//   } else {
-//     const url = `/catalog/${slug}`;
-//     return axiosService.get(url);
-//   }
-// };
-
-import { AxiosResponse } from 'axios';
+import { axiosService, setHeader } from './axiosClient';
 
 interface CatalogApiQuery {
   page?: number;
@@ -23,22 +11,29 @@ export const catalogApi = (query?: CatalogApiQuery) => {
   return axiosService.get(url, { params: { ...query } });
 };
 
-// export const createNewCatalogApi = (dataCatalog:{}) => {
-//   const url = `/catalog`;
-//   return axiosService.post(url, dataCatalog);
-// };
+export const createNewCatalogApi = (dataCatalog: { name: string; slug: string; image?: string }, token: string) => {
+  const url = `/catalog`;
+  const headers = setHeader(token);
+  return axiosService.post(url, dataCatalog, { headers });
+};
 
-// export const updateCatalogApi = (dataUpdate:{}) => {
-//   const url = `/catalog`;
-//   return axiosService.patch(url, dataUpdate);
-// };
+export const updateCatalogApi = (
+  dataUpdate: { id: number; name: string; slug: string; image?: string },
+  token: string,
+) => {
+  const url = `/catalog`;
+  const headers = setHeader(token);
+  return axiosService.patch(url, dataUpdate, { headers });
+};
 
-// export const deleteCatalogApi = (id) => {
-//   const url = `/catalog`;
-//   return axiosService.delete(url, { data: { id } });
-// };
+export const deleteCatalogApi = (id: number, token: string) => {
+  const url = `/catalog`;
+  const headers = setHeader(token);
+  return axiosService.delete(url, { headers, data: { id } });
+};
 
-// export const importCatalogsApi = (formData:{}) => {
-//   const url = `/catalog/import`;
-//   return axiosService.post(url, formData);
-// };
+export const importCatalogsApi = (formData: any, token: string) => {
+  const url = `/catalog/import`;
+  const headers = setHeader(token, true);
+  return axiosService.post(url, formData, { headers });
+};

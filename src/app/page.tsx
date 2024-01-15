@@ -9,10 +9,22 @@ async function getData() {
 
 async function HomePage() {
   const data = await getData();
-  const { catalogsWithMenus, catalogs, imagePath } = data?.data;
+  const { catalogsWithMenus, imagePath } = data?.data;
   const monMoi = catalogsWithMenus.find((catalog: any) => catalog.slug === 'cac-mon-moi').menus;
   const monDacBiet = catalogsWithMenus.find((catalog: any) => catalog.slug === 'mon-dac-biet').menus;
-
+  const newcatalogsWithMenus = catalogsWithMenus.sort((a: any, b: any) => {
+    if (a.slug === 'mon-dac-biet') return -1;
+    if (b.slug === 'mon-dac-biet') return 1;
+    if (a.slug === 'cac-mon-moi') return -1;
+    if (b.slug === 'cac-mon-moi') return 1;
+    if (a.room === 'nuoc-ngot') return 1;
+    if (b.room === 'nuoc-ngot') return -1;
+    if (a.room === 'bia') return 1;
+    if (b.room === 'bia') return -1;
+    if (a.room === 'ruou') return -1;
+    if (b.room === 'ruou') return 1;
+    return 0;
+  }) as any[];
   return (
     <DefaultLayout>
       <MySlider
@@ -27,7 +39,7 @@ async function HomePage() {
         headerSlider={{ title: 'Món mới', extendTitle: { title: 'Xem thêm', url: '/menu?=cac-mon-moi' } }}
       />
       <MySlider
-        data={{ items: catalogs, imagePath }}
+        data={{ items: newcatalogsWithMenus, imagePath }}
         headerSlider={{ title: 'Categories', extendTitle: { title: 'Xem thêm', url: '/menu' } }}
       />
     </DefaultLayout>

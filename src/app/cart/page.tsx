@@ -1,6 +1,6 @@
 'use client';
 import Button from '@/components/Button/Button';
-import { ICartItem, useMyContext } from '@/context/context';
+import { IMenu, useMyContext } from '@/context/context';
 import { setOrderItems } from '@/lib/redux/features/orderSlice';
 import { useAppDispatch } from '@/lib/redux/store';
 import { myColors } from '@/styles/color';
@@ -17,7 +17,7 @@ const Cart = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { cartItems, handleGetCartItems } = useMyContext();
-  const [selectedFoods, setSelectedFoods] = useState<ICartItem[]>([]);
+  const [selectedFoods, setSelectedFoods] = useState<IMenu[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [cartItemDelete, setCartItemDelete] = useState<{
     openDelete?: boolean;
@@ -34,7 +34,7 @@ const Cart = () => {
         cartItems.some((itemA) => itemA.menu_id === itemB.menu_id),
       );
 
-      let newSelectFoods: ICartItem[] = [];
+      let newSelectFoods: IMenu[] = [];
       selectedFoods.forEach((itemA) => {
         const itemB = cartItems.find((item) => item.menu_id === itemA.menu_id);
         if (itemB) {
@@ -81,7 +81,7 @@ const Cart = () => {
       customer_id: item.customer_id,
       id: item.id,
       unit: item.unit,
-    })) as ICartItem[];
+    })) as IMenu[];
 
     dispatch(setOrderItems(orderItems));
     router.push('/checkout');

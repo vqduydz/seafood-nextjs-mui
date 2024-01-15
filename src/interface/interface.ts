@@ -48,7 +48,7 @@ export interface IOrder {
   handler?: IUser | null;
 }
 
-export interface ICartItem {
+export interface IMenu {
   id: number;
   customer_id: number;
   menu_id: number;
@@ -61,6 +61,7 @@ export interface ICartItem {
   unit: string;
   max_order: number | null;
   image: string;
+  createdAt: string;
 }
 
 export interface IOrderItems {

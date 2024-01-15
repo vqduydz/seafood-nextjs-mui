@@ -1,11 +1,12 @@
 import Button from '@/components/Button/Button';
 import { useMyContext } from '@/context/context';
-import { ISetState } from '@/interface/interface';
+import { ISetState, ISubmitForm } from '@/interface/interface';
+import { importCatalogsApi } from '@/utils/services/api/catalogApi';
 import { importUsersApi } from '@/utils/services/api/userApi';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { ChangeEvent, SyntheticEvent, useState } from 'react';
+import { ChangeEvent, memo, useState } from 'react';
 
 interface IFileUpload {
   setUpload: ISetState<boolean>;
@@ -26,7 +27,7 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false,
     }
   };
 
-  const handleUpload = async (e: SyntheticEvent) => {
+  const handleUpload = async (e: ISubmitForm) => {
     setLoad(true);
     e.preventDefault();
 
@@ -35,13 +36,30 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false,
       formData.append('file', file);
       if (users) {
         try {
-          const response = (await importUsersApi(formData, auth?.token as string)).data;
-          if (response.error) {
-            enqueueSnackbar(response.error as string, { variant: 'error' });
+          const response = await importUsersApi(formData, auth?.token as string);
+          if (response.data.error) {
+            enqueueSnackbar(response.data.error as string, { variant: 'error' });
             setLoad(false);
             return;
           }
-          enqueueSnackbar(response.message, { variant: 'success' });
+          enqueueSnackbar(response.data, { variant: 'success' });
+          setUpload(false);
+          setLoad(false);
+        } catch (error) {
+          console.error(error);
+          setLoad(false);
+        }
+        return;
+      }
+      if (catalogs) {
+        try {
+          const response = await importCatalogsApi(formData, auth?.token as string);
+          if (response.data.error) {
+            enqueueSnackbar(response.data.error as string, { variant: 'error' });
+            setLoad(false);
+            return;
+          }
+          enqueueSnackbar(response.data, { variant: 'success' });
           setUpload(false);
           setLoad(false);
         } catch (error) {
@@ -183,4 +201,4 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false,
   );
 };
 
-export default FileUpload;
+export default memo(FileUpload);

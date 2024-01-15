@@ -1,14 +1,7 @@
 'use client';
 
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-// import { Button, PaginationCustom, SearchBox } from '_/components/common';
-// import { useThemMui } from '_/context/ThemeMuiContext';
-// import useDebounce from '_/hook/useDebounce';
-// import { getUser } from '_/redux/slices';
-// import { gmailFiller } from '_/utills';
-// import FileUpload from '../FileUpload';
-// import CreateNewUser from './CreateNewUser';
+import { memo, useEffect, useState } from 'react';
 import Button from '@/components/Button/Button';
 import PaginationCustom from '@/components/PaginationCustom/PaginationCustom';
 import SearchBox from '@/components/SearchBox/SearchBox';
@@ -22,12 +15,13 @@ import CreateNewUser from './CreateNewUser';
 import EditUser from './EditUser';
 import Loading from '@/components/Loading/Loading';
 import FileUpload from '../FileUpload';
+import { myColors } from '@/styles/color';
 
 export default function UserManage() {
   const [edit, setEdit] = useState<{ stt: boolean; value?: IUser }>({ stt: false });
   const [addUser, setAddUser] = useState<boolean>(false);
   const [overLay, setOverLay] = useState(false);
-  const { auth, loading } = useMyContext();
+  const { auth } = useMyContext();
   const [upload, setUpload] = useState<boolean>(false);
   const [tab, setTab] = useState({ index: 0, role: '', content: '' });
   const { index, role, content } = tab;
@@ -38,6 +32,7 @@ export default function UserManage() {
   const [allUser, setAllUser] = useState({ items: [], totalPages: 1, limitPerPage: limit_per_page });
   const { items, totalPages, limitPerPage } = allUser;
   const [load, setLoad] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!addUser && !edit.stt) {
@@ -52,20 +47,19 @@ export default function UserManage() {
       ? { page, limit_per_page, role }
       : { page, limit_per_page, role, email: gmailFiller(debounce) };
     if (debounce.trim()) {
-      setLoad(true);
+      setLoading(true);
     }
 
     (async () => {
-      const getUser = (await getUserApi(query, auth?.token as string)).data;
-      if (getUser) setLoad(false);
+      const getUser = await getUserApi(query, auth?.token as string);
+      setLoading(false);
       setAllUser({
-        items: getUser.users,
-        totalPages: getUser.totalPages,
-        limitPerPage: getUser.limit_per_page,
+        items: getUser.data.users,
+        totalPages: getUser.data.totalPages,
+        limitPerPage: getUser.data.limit_per_page,
       });
     })();
 
-    console.log(load);
     window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounce, page, limit_per_page, content, load]);
@@ -114,7 +108,7 @@ export default function UserManage() {
             backgroundColor: '#f9f9f9',
             '& *': { fontWeight: '700 !important' },
             position: 'sticky',
-            top: '137px',
+            top: '155px',
             zIndex: 1,
           }}
         >
@@ -186,7 +180,7 @@ export default function UserManage() {
           display: 'flex',
           gap: '10px',
           position: 'sticky',
-          top: '56px',
+          top: '70px',
           zIndex: 1,
           mb: '1vh',
           backgroundColor: '#fff',
@@ -195,7 +189,7 @@ export default function UserManage() {
         <SearchBox
           searchValue={searchValue}
           setSearchValue={setSearchValue}
-          loading={load}
+          loading={loading}
           placeholder="Tìm user theo email ..."
           handleCreate={setAddUser}
           handleImport={setUpload}
@@ -209,8 +203,9 @@ export default function UserManage() {
           padding: '5px 10px',
           backgroundColor: '#f9f9f9',
           border: '1px solid #eee',
+          borderBottom: '1px solid #00000022',
           position: 'sticky',
-          top: '96px',
+          top: '110px',
           zIndex: 1,
           mb: '1vh',
         }}
@@ -258,7 +253,7 @@ export default function UserManage() {
             />
           )}
           {edit.stt && <EditUser load={load} setLoad={setLoad} setEdit={setEdit} edit={edit} />}
-          {addUser && <CreateNewUser load={load} setLoad={setLoad} setAddUser={setAddUser} />}
+          {addUser && <CreateNewUser setLoad={setLoad} setAddUser={setAddUser} />}
           {upload && <FileUpload setLoad={setLoad} setUpload={setUpload} users />}
         </Box>
       )}

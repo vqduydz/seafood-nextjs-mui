@@ -30,10 +30,7 @@ const Feedback = ({ feedback, setfeedback, order_code }: IFeedback) => {
         menu_id,
         customer_id: currentUser?.id as number,
       };
-
-      console.log({ feedbackData });
-      const res = (await createNewFeedbackApi({ feedbackData, token: auth?.token as string })).data;
-      console.log({ res });
+      const res = await createNewFeedbackApi({ feedbackData, token: auth?.token as string });
     } catch (error) {}
   };
 

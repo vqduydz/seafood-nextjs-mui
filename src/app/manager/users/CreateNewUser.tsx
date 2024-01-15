@@ -9,15 +9,14 @@ import removeVietnameseTones from '@/utils/removeVietnameseTones';
 import { createNewUserApi } from '@/utils/services/api/userApi';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
 export default function CreateNewUser({
-  load,
   setLoad,
   setAddUser,
 }: {
   setAddUser: ISetState<boolean>;
-  load: boolean;
   setLoad: ISetState<boolean>;
 }) {
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +24,7 @@ export default function CreateNewUser({
   const [genderSelect, setGenderSelect] = useState('Female');
   const roleList = ['Root', 'Admin', 'Manage', 'Deliver', 'Customer'];
   const genderList = ['Female', 'Male', 'Other'];
-  const { enqueueSnackbar } = useMyContext();
+  const { enqueueSnackbar } = useSnackbar();
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
 
@@ -51,7 +50,7 @@ export default function CreateNewUser({
     }
     const respone = await createNewUserApi(dataUser);
     if (respone.data.error) return setError(respone.data.error);
-    if (enqueueSnackbar) enqueueSnackbar(respone.data, { variant: 'success' });
+    enqueueSnackbar(respone.data, { variant: 'success' });
     setLoad(false);
     setAddUser(false);
   };

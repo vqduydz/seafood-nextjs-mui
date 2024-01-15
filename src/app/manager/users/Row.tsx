@@ -1,20 +1,12 @@
 import Button from '@/components/Button/Button';
 import { useMyContext } from '@/context/context';
-import { IUser, ISetState } from '@/interface/interface';
+import { ISetState, IUser } from '@/interface/interface';
 import dateTimeFormate from '@/utils/dateTimeFormate';
 import { deleteUserApi } from '@/utils/services/api/userApi';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, Collapse, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useState } from 'react';
-// import { useDispatch } from 'react-redux';
-
-// import { Button } from '_/components/common';
-// import { useAuth } from '_/context/AuthContext';
-// import { useThemMui } from '_/context/ThemeMuiContext';
-// import { deleteUser } from '_/redux/slices';
-// import { dateTimeFormate } from '_/utills';
 
 interface IRow {
   user: IUser;
@@ -24,7 +16,7 @@ interface IRow {
 
 export default function Row({ user, STT, setEdit }: IRow) {
   const { id, phoneNumber, gender, place, name, role, email, createdAt } = user;
-  const { currentUser, socket } = useMyContext();
+  const { currentUser } = useMyContext();
   const [open, setOpen] = useState(false);
   const { auth, setLoading, emitEvent } = useMyContext();
 
@@ -32,8 +24,8 @@ export default function Row({ user, STT, setEdit }: IRow) {
     if (setLoading) setLoading({ loading: true });
     try {
       if (confirm('Delete confirmation')) {
-        const deleteUser = (await deleteUserApi(id, auth?.token as string)).data;
-        if (!deleteUser.error) {
+        const deleteUser = await deleteUserApi(id, auth?.token as string);
+        if (!deleteUser.data.error) {
           if (emitEvent) emitEvent('deleteUser', id);
         }
         //     const userId = id;
