@@ -1,28 +1,29 @@
 import Button from '@/components/Button/Button';
 import MyTextField from '@/components/MyTextField/MyTextField';
 import { useMyContext } from '@/context/context';
-import { ICatalogGet, ISetState, ISubmitForm } from '@/interface/interface';
+import { IMenuGet, ISetState, ISubmitForm } from '@/interface/interface';
 import capitalize from '@/utils/capitalize';
 import removeVietnameseTones from '@/utils/removeVietnameseTones';
-import { updateCatalogApi } from '@/utils/services/api/catalogApi';
+import { updateMenuApi } from '@/utils/services/api/menuApi';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { ChangeEvent, useState } from 'react';
+import CatalogDrop from './CatalogDrop';
 
-interface IEditCatalog {
-  edit: { stt: boolean; value?: ICatalogGet };
-  setEdit: ISetState<{ stt: boolean; value?: ICatalogGet }>;
+interface IEditMenu {
+  edit: { stt: boolean; value?: IMenuGet };
+  setEdit: ISetState<{ stt: boolean; value?: IMenuGet }>;
   setLoad: ISetState<boolean>;
+  cataloglist: string[];
 }
 
-const EditCatalog = ({ edit, setEdit, setLoad }: IEditCatalog) => {
+const EditMenu = ({ edit, setEdit, cataloglist, setLoad }: IEditMenu) => {
   const { value } = edit;
-  const { enqueueSnackbar } = useSnackbar();
-  const { auth } = useMyContext();
   const [image, setImage] = useState<any>();
-
+  const { auth } = useMyContext();
+  const { enqueueSnackbar } = useSnackbar();
   const handleSubmit = async (e: ISubmitForm) => {
     e.preventDefault();
     setLoad(true);
@@ -32,19 +33,37 @@ const EditCatalog = ({ edit, setEdit, setLoad }: IEditCatalog) => {
         const data = new FormData(e.currentTarget);
         const slug = (removeVietnameseTones(data.get('name') as string) as string).toLowerCase().replace(/ /g, '-');
         const imageUrl = image ? await uploadImage(slug) : null;
-        const menuData = imageUrl
-          ? {
-              id: id as number,
-              name: capitalize(data.get('name') as string) as string,
-              slug: slug as string,
-              image: imageUrl as string,
-            }
-          : {
-              id: id as number,
-              name: capitalize(data.get('name') as string) as string,
-              slug: slug as string,
-            };
-        const res = await updateCatalogApi(menuData, auth?.token as string);
+
+        const menuData = (
+          imageUrl
+            ? {
+                id: id as number,
+                name: capitalize(data.get('name') as string) as string,
+                slug,
+                catalog: capitalize(data.get('catalog') as string) as string,
+                catalogSlug: (removeVietnameseTones(data.get('catalog') as string) as string)
+                  .toLowerCase()
+                  .replace(/ /g, '-'),
+                price: data.get('price') as unknown as number,
+                max_order: data.get('max_order') as unknown as number,
+                unit: capitalize(data.get('unit') as string) as string,
+                image: imageUrl as string,
+              }
+            : {
+                id: id as number,
+                name: capitalize(data.get('name') as string) as string,
+                slug,
+                catalog: capitalize(data.get('catalog') as string) as string,
+                catalogSlug: (removeVietnameseTones(data.get('catalog') as string) as string)
+                  .toLowerCase()
+                  .replace(/ /g, '-'),
+                price: data.get('price') as unknown as number,
+                max_order: data.get('max_order') as unknown as number,
+                unit: capitalize(data.get('unit') as string) as string,
+              }
+        ) as IMenuGet;
+
+        const res = await updateMenuApi(menuData, auth?.token as string);
         if (res.data && res.data.error) return enqueueSnackbar(res.data.error, { variant: 'error' });
         enqueueSnackbar(res.data, { variant: 'success' });
         setEdit({ stt: false });
@@ -71,19 +90,19 @@ const EditCatalog = ({ edit, setEdit, setLoad }: IEditCatalog) => {
       }
   };
 
-  const handleClearContent = () => {
+  const handleCancle = () => {
     setEdit({ stt: false });
-    // setCatalog({ ...catalog });
+    // setMenu({ ...menu });
   };
 
   return (
     <Box
       sx={{
         borderRadius: { 768: '10px' },
-        padding: '20px 20px 37px',
+        padding: '20px',
         maxWidth: '768px',
         width: '100%',
-        minWidth: '768px',
+        minWidth: '480px',
         margin: '0 auto',
         backgroundColor: '#fff',
         position: 'fixed',
@@ -94,9 +113,6 @@ const EditCatalog = ({ edit, setEdit, setLoad }: IEditCatalog) => {
       }}
     >
       <form onSubmit={handleSubmit}>
-        <Typography color={'gray'} fontWeight={500} fontSize={'2.4rem'}>
-          {`Chỉnh sửa "${value?.name}"`}
-        </Typography>
         <Box
           sx={{
             display: 'flex',
@@ -110,15 +126,63 @@ const EditCatalog = ({ edit, setEdit, setLoad }: IEditCatalog) => {
           <MyTextField
             props={{
               size: 'small',
-              label: 'Tên danh mục',
+              label: 'Tên món ăn',
               id: 'name',
               name: 'name',
-              type: '',
               fullWidth: true,
               autoFocus: true,
               required: true,
-              sx: { mt: 0 },
-              defaultValue: value ? value.name : '',
+              defaultValue: value?.name,
+            }}
+          />
+          <CatalogDrop cataloglist={cataloglist} defaultValue={value?.catalog} />
+        </Box>
+        <Box
+          sx={{
+            mb: '15px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+          }}
+        >
+          <MyTextField
+            props={{
+              size: 'small',
+              label: 'Đơn giá',
+              fullWidth: true,
+              id: 'price',
+              name: 'price',
+              type: 'number',
+              required: true,
+              defaultValue: value?.price,
+              sx: { m: 0 },
+            }}
+          />
+          <MyTextField
+            props={{
+              size: 'small',
+              label: 'Đơn vị tính',
+              fullWidth: true,
+              id: 'unit',
+              name: 'unit',
+              required: true,
+              type: '',
+              defaultValue: value?.unit,
+              sx: { m: 0 },
+            }}
+          />
+          <MyTextField
+            props={{
+              size: 'small',
+              label: 'SL đặt tối đa',
+              fullWidth: true,
+              id: 'max_order',
+              name: 'max_order',
+              required: true,
+              type: 'number',
+              defaultValue: value?.max_order,
+              sx: { m: 0 },
             }}
           />
 
@@ -155,17 +219,19 @@ const EditCatalog = ({ edit, setEdit, setLoad }: IEditCatalog) => {
             )}
           </label>
         </Box>
-        <Box sx={{ mt: '15px', display: 'flex', gap: '10px', justifyContent: 'end' }}>
-          <Button primary type="submit">
-            Lưu
-          </Button>
-          <Button outline type="button" onClick={handleClearContent}>
-            Hủy
-          </Button>
+        <Box sx={{ margin: '15px 0', display: 'flex', gap: '10px', justifyContent: 'end' }}>
+          <Box sx={{ mt: '15px', display: 'flex', gap: '10px', justifyContent: 'end' }}>
+            <Button primary type="submit">
+              Lưu
+            </Button>
+            <Button outline type="button" onClick={handleCancle}>
+              Hủy
+            </Button>
+          </Box>
         </Box>
       </form>
     </Box>
   );
 };
 
-export default EditCatalog;
+export default EditMenu;

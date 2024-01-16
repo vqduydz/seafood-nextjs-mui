@@ -4,7 +4,6 @@ import PaginationCustom from '@/components/PaginationCustom/PaginationCustom';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import { useMyContext } from '@/context/context';
 import useDebounce from '@/hook/useDebounce';
-import { IMenu } from '@/interface/interface';
 import { myColors } from '@/styles/color';
 import dateTimeFormate from '@/utils/dateTimeFormate';
 import removeVietnameseTones from '@/utils/removeVietnameseTones';
@@ -14,21 +13,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
-import CreateNewCatalog from './CreateNewCatalog';
-import EditMenu from './EditCatalog';
 import FileUpload from '../FileUpload';
+import CreateNewCatalog from './CreateNewCatalog';
+import EditCatalog from './EditCatalog';
+import { ICatalogGet } from '@/interface/interface';
 
 export default function CatalogManage() {
   const { auth } = useMyContext();
-  const [edit, setEdit] = useState<{ stt: boolean; value?: IMenu }>({ stt: false });
+  const [edit, setEdit] = useState<{ stt: boolean; value?: ICatalogGet }>({ stt: false });
   const [upload, setUpload] = useState(false);
   const [addCatalog, setAddCatalog] = useState<boolean>(false);
   const [overLay, setOverLay] = useState(false);
   const [page, setPage] = useState(1);
-  const [limit_per_page, setlimit_per_page] = useState(20);
+  const [limit_per_page, setlimit_per_page] = useState(10);
   const { enqueueSnackbar } = useSnackbar();
   const [catalogs, setCatalogs] = useState<{
-    items: IMenu[];
+    items: ICatalogGet[];
     imagePath: string;
     totalPages: number;
     limitPerPage: number;
@@ -73,6 +73,7 @@ export default function CatalogManage() {
       });
       setLoading(false);
     })();
+    window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit_per_page, debounce, overLay, load]);
 
@@ -103,7 +104,7 @@ export default function CatalogManage() {
           key={index}
           sx={{
             display: 'flex',
-            padding: '10px',
+            padding: '5px',
             backgroundColor: index % 2 === 0 ? '#fff' : '#f5f5f5',
             border: '1px solid #0000000a',
             justifyContent: 'space-between',
@@ -115,7 +116,7 @@ export default function CatalogManage() {
         >
           <Box
             sx={{
-              gap: '15px',
+              gap: '10px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -128,7 +129,7 @@ export default function CatalogManage() {
               sx={{
                 backgroundImage: `url(${imagePath}${image})`,
                 minWidth: '80px',
-                height: '60px',
+                height: '50px',
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
@@ -210,7 +211,7 @@ export default function CatalogManage() {
 
       <Box
         sx={{
-          padding: '15px 10px',
+          padding: '15px 5px',
           backgroundColor: '#f9f9f9',
           border: '1px solid #0000000a',
           display: 'flex',
@@ -234,7 +235,9 @@ export default function CatalogManage() {
           <Typography textAlign={'center'} sx={{ minWidth: '30px' }}>
             STT
           </Typography>
-          <Typography sx={{ minWidth: '80px' }}>Hình ảnh</Typography>
+          <Typography textAlign={'center'} sx={{ minWidth: '80px' }}>
+            Hình ảnh
+          </Typography>
           <Typography>Tên danh mục</Typography>
         </Box>
         <Box
@@ -279,7 +282,7 @@ export default function CatalogManage() {
               }}
             />
           )}
-          {edit.stt && <EditMenu setEdit={setEdit} edit={edit} load={load} setLoad={setLoad} />}
+          {edit.stt && <EditCatalog setEdit={setEdit} edit={edit} setLoad={setLoad} />}
           {addCatalog && <CreateNewCatalog setLoad={setLoad} setAddCatalog={setAddCatalog} />}
           {upload && <FileUpload setUpload={setUpload} setLoad={setLoad} catalogs />}
         </Box>

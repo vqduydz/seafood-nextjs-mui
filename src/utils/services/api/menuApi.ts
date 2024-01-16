@@ -1,4 +1,5 @@
-import { axiosService } from './axiosClient';
+import { IMenuCreate, IMenuGet } from '@/interface/interface';
+import { axiosService, setHeader } from './axiosClient';
 
 interface menuApiQuery {
   page?: number;
@@ -11,22 +12,26 @@ export const menuApi = (query?: menuApiQuery) => {
   return axiosService.get(url, { params: { ...query } });
 };
 
-// export const createNewCatalogApi = (dataCatalog:{}) => {
-//   const url = `/catalog`;
-//   return axiosService.post(url, dataCatalog);
-// };
+export const createNewMenugApi = (menuData: IMenuCreate, token: string) => {
+  const url = '/menu';
+  const headers = setHeader(token);
+  return axiosService.post(url, menuData, { headers });
+};
 
-// export const updateCatalogApi = (dataUpdate:{}) => {
-//   const url = `/catalog`;
-//   return axiosService.patch(url, dataUpdate);
-// };
+export const updateMenuApi = (dataUpdate: IMenuGet, token: string) => {
+  const url = '/menu';
+  const headers = setHeader(token);
+  return axiosService.patch(url, dataUpdate, { headers });
+};
 
-// export const deleteCatalogApi = (id) => {
-//   const url = `/catalog`;
-//   return axiosService.delete(url, { data: { id } });
-// };
+export const deleteMenuApi = (id: number, token: string) => {
+  const url = '/menu';
+  const headers = setHeader(token);
+  return axiosService.delete(url, { headers, data: { id } });
+};
 
-// export const importCatalogsApi = (formData:{}) => {
-//   const url = `/catalog/import`;
-//   return axiosService.post(url, formData);
-// };
+export const importMenusApi = (formData: any, token: string) => {
+  const url = '/menu/import';
+  const headers = setHeader(token, true);
+  return axiosService.post(url, formData, { headers });
+};

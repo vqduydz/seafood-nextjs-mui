@@ -52,8 +52,6 @@ const EditPlace = ({
       } as IPlace;
       const allPlaceUpdate = allPlace?.filter((item) => item.place_id !== slPlaceUpdate.place_id).concat(slPlaceUpdate);
 
-      // console.log({ slPlaceUpdate, allPlaceUpdate, allPlace });
-
       const dataUpdate = {
         id: currentUser?.id as string | number,
         place: JSON.stringify(allPlaceUpdate),

@@ -1,4 +1,4 @@
-import { IMenu, ISetState } from '@/interface/interface';
+import { IMenuOrder, ISetState } from '@/interface/interface';
 import { AuthState, logout } from '@/lib/redux/features/authSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/store';
 import { getCartItemApi } from '@/utils/services/api/cartItemApi';
@@ -35,8 +35,8 @@ interface MyContextType {
   listenToEvent?: (eventName: string) => Promise<any>;
   auth?: AuthState;
   currentUser?: IUser | null;
-  cartItems?: IMenu[] | [];
-  orderItems?: IMenu[] | [];
+  cartItems?: IMenuOrder[] | [];
+  orderItems?: IMenuOrder[] | [];
   loading?: { loading: boolean; message?: string };
   setLoading?: ISetState<{ loading: boolean; message?: string }> | (() => void);
   handleGetCartItems?: () => void;
@@ -48,16 +48,16 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   //
   const dispatch = useAppDispatch();
   const authSelector = useAppSelector((state) => state.auth) as AuthState;
-  const orderItemsSelector = useAppSelector((state) => state.orderItems.orderItems) as IMenu[];
+  const orderItemsSelector = useAppSelector((state) => state.orderItems.orderItems) as IMenuOrder[];
   const [auth, setAuth] = useState<AuthState & { currentUser?: IUser }>({
     currentUserToken: authSelector.currentUserToken,
     isLogin: authSelector.isLogin,
     token: authSelector.token,
   });
   const [currentUser, setCurrentUser] = useState<IUser | null>();
-  const [cartItems, setCartItems] = useState<IMenu[] | []>([]);
+  const [cartItems, setCartItems] = useState<IMenuOrder[] | []>([]);
   const [loading, setLoading] = useState<{ loading: boolean; message?: string }>({ loading: false });
-  const [orderItems, setOrderItems] = useState<IMenu[]>([]);
+  const [orderItems, setOrderItems] = useState<IMenuOrder[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
 
   // auth

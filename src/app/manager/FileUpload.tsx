@@ -2,6 +2,7 @@ import Button from '@/components/Button/Button';
 import { useMyContext } from '@/context/context';
 import { ISetState, ISubmitForm } from '@/interface/interface';
 import { importCatalogsApi } from '@/utils/services/api/catalogApi';
+import { importMenusApi } from '@/utils/services/api/menuApi';
 import { importUsersApi } from '@/utils/services/api/userApi';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { Box, Typography } from '@mui/material';
@@ -69,34 +70,23 @@ const FileUpload = ({ setUpload, menus = false, catalogs = false, users = false,
         return;
       }
 
-      // if (catalogs) {
-      //   dispatch(importCatalogs(formData))
-      //     .then(unwrapResult)
-      //     .then((result) => {
-      //       setUpload(false);
-      //       setLoading(false);
-      //     })
-      //     .catch((error) => {
-      //       console.log({ error });
-      //       setUpload(false);
-      //       setLoading(false);
-      //     });
-      //   return;
-      // }
-      // if (users) {
-      //   dispatch(importUsers(formData))
-      //     .then(unwrapResult)
-      //     .then((result) => {
-      //       setUpload(false);
-      //       setLoading(false);
-      //     })
-      //     .catch((error) => {
-      //       console.log({ error });
-      //       setUpload(false);
-      //       setLoading(false);
-      //     });
-      //   return;
-      // }
+      if (menus) {
+        try {
+          const response = await importMenusApi(formData, auth?.token as string);
+          if (response.data.error) {
+            enqueueSnackbar(response.data.error as string, { variant: 'error' });
+            setLoad(false);
+            return;
+          }
+          enqueueSnackbar(response.data, { variant: 'success' });
+          setUpload(false);
+          setLoad(false);
+        } catch (error) {
+          console.error(error);
+          setLoad(false);
+        }
+        return;
+      }
     }
   };
 

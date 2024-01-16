@@ -59,8 +59,6 @@ const AddFirstPlace = () => {
         id: currentUser?.id as string | number,
         place: JSON.stringify([FPlace]),
       };
-      console.log({ dataUpdate });
-
       const res = await updateUserApi(dataUpdate, auth?.token as string);
       if (res.data && !res.data.error) {
         dispatch(login(auth?.token as string));

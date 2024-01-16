@@ -40,7 +40,6 @@ export function ForgotPasswordForm() {
         setError(res.data.error);
         return;
       }
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {

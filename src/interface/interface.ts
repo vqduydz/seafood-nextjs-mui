@@ -48,7 +48,7 @@ export interface IOrder {
   handler?: IUser | null;
 }
 
-export interface IMenu {
+export interface IMenuOrder {
   id: number;
   customer_id: number;
   menu_id: number;
@@ -81,6 +81,42 @@ export interface IOrderItems {
   customer_id: number;
   id: number;
   unit: string;
+}
+
+export interface IMenuCreate {
+  name: string;
+  slug: string;
+  catalog: string;
+  price: number;
+  max_order: number;
+  unit: string;
+  image: string;
+}
+export interface IMenuGet {
+  id: number;
+  name: string;
+  slug: string;
+  catalog: string;
+  catalogSlug: string;
+  price: number;
+  max_order: number;
+  unit: string;
+  image: string;
+  createdAt?: string;
+}
+
+export interface ICatalogCreate {
+  name: string;
+  slug: string;
+  image?: string;
+}
+
+export interface ICatalogGet {
+  id: number;
+  name: string;
+  slug: string;
+  image?: string;
+  createdAt: string;
 }
 
 export type ISetState<T> = Dispatch<SetStateAction<T>> | (() => void);

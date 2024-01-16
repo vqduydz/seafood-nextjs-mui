@@ -5,16 +5,10 @@ import renderPrice from '@/utils/renderPrice';
 import { Box, Typography } from '@mui/material';
 import AddToCart from '../AddToCartBtn/AddToCartBtn';
 import Button from '../Button/Button';
+import { IMenuGet } from '@/interface/interface';
 
 interface RenderProps {
-  items: {
-    image: string;
-    name: string;
-    slug: string;
-    unit: string;
-    price: number;
-    id: number;
-  }[];
+  items: IMenuGet[];
   imagePath: string;
 }
 

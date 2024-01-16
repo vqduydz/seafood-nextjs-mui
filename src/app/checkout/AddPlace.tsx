@@ -68,8 +68,6 @@ const AddPlace = ({
     }
   };
 
-  // console.log({ addressList });
-
   return (
     <Snackbar
       className="nnnnnnnn"
